@@ -1,8 +1,10 @@
-use crate::app::AppResult;
 use crossterm::event::{self, Event as CrosstermEvent, KeyEvent, MouseEvent};
+use log::debug;
 use std::sync::mpsc;
 use std::thread;
 use std::time::{Duration, Instant};
+
+use crate::AppResult;
 
 /// Terminal events.
 #[derive(Clone, Copy, Debug)]
@@ -44,7 +46,9 @@ impl EventHandler {
                         .unwrap_or(tick_rate);
 
                     if event::poll(timeout).expect("no events available") {
-                        match event::read().expect("unable to read event") {
+                        let event = event::read().expect("unable to read event");
+                        debug!("{:?}", event);
+                        match event {
                             CrosstermEvent::Key(e) => sender.send(Event::Key(e)),
                             CrosstermEvent::Mouse(e) => sender.send(Event::Mouse(e)),
                             CrosstermEvent::Resize(w, h) => sender.send(Event::Resize(w, h)),

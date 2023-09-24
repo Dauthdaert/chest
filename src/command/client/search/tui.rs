@@ -1,6 +1,3 @@
-use crate::app::{App, AppResult};
-use crate::event::EventHandler;
-use crate::ui;
 use crossterm::event::{DisableMouseCapture, EnableMouseCapture};
 use crossterm::terminal::{self, EnterAlternateScreen, LeaveAlternateScreen};
 use std::io;
@@ -8,6 +5,12 @@ use std::panic;
 use tui::backend::Backend;
 use tui::prelude::CrosstermBackend;
 use tui::Terminal;
+
+use crate::command::client::event::EventHandler;
+use crate::AppResult;
+
+use super::app::App;
+use super::ui;
 
 /// Representation of a terminal user interface.
 ///
@@ -32,7 +35,7 @@ impl<B: Backend> Tui<B> {
     /// It enables the raw mode and sets terminal properties.
     pub fn init(&mut self) -> AppResult<()> {
         terminal::enable_raw_mode()?;
-        crossterm::execute!(io::stderr(), EnterAlternateScreen, EnableMouseCapture)?;
+        crossterm::execute!(io::stdout(), EnterAlternateScreen, EnableMouseCapture)?;
 
         // Define a custom panic hook to reset the terminal properties.
         // This way, you won't have your terminal messed up if an unexpected error happens.
@@ -62,8 +65,8 @@ impl<B: Backend> Tui<B> {
     /// the terminal properties if unexpected errors occur.
     pub fn reset() -> AppResult<()> {
         terminal::disable_raw_mode()?;
-        crossterm::execute!(io::stderr(), LeaveAlternateScreen, DisableMouseCapture)?;
-        Terminal::new(CrosstermBackend::new(io::stderr()))?.show_cursor()?;
+        crossterm::execute!(io::stdout(), LeaveAlternateScreen, DisableMouseCapture)?;
+        Terminal::new(CrosstermBackend::new(io::stdout()))?.show_cursor()?;
         Ok(())
     }
 }

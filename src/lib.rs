@@ -1,52 +1,23 @@
-use std::{path::PathBuf, sync::OnceLock};
-
-use directories::ProjectDirs;
-
-/// Application.
-pub mod app;
-
-/// Terminal events handler.
-pub mod event;
-
-/// Widget renderer.
-pub mod ui;
-
-/// Terminal user interface.
-pub mod tui;
-
-/// Event handler.
-pub mod handler;
-
-/// Command type
 mod command;
+mod dirs;
 
-/// Database queries
-mod queries;
+use clap::Parser;
+use command::ChestCommand;
 
-/// List mode specific behavior
-mod list_mode;
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-static PROJECT_DIR: OnceLock<ProjectDirs> = OnceLock::new();
-static DATA_DIR: OnceLock<PathBuf> = OnceLock::new();
+/// Application result type.
+pub type AppResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-fn project_dir() -> ProjectDirs {
-    PROJECT_DIR
-        .get_or_init(|| {
-            ProjectDirs::from("", "", "chest").expect("Unable to obtain project directory")
-        })
-        .clone()
+#[derive(Parser)]
+#[command(author = "Wayan-Gwie Lapointe", version = VERSION)]
+pub struct Chest {
+    #[command(subcommand)]
+    chest: ChestCommand,
 }
 
-pub fn data_dir() -> PathBuf {
-    DATA_DIR
-        .get_or_init(|| project_dir().data_dir().to_path_buf())
-        .clone()
-}
-
-pub fn db_path() -> PathBuf {
-    data_dir().join("commands.db")
-}
-
-pub fn log_path() -> PathBuf {
-    data_dir().join("log.txt")
+impl Chest {
+    pub fn run(self) -> AppResult<()> {
+        self.chest.run()
+    }
 }

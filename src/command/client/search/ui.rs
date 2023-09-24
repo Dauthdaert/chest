@@ -6,16 +6,10 @@ use tui::{
     Frame,
 };
 
-use crate::{app::App, handler::AppMode};
+use crate::command::client::search::app::App;
 
 /// Renders the user interface widgets.
 pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
-    let AppMode::List {
-        input: search_box,
-        searching,
-        current_commands
-    } = &mut app.app_mode else {return;};
-
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(2)
@@ -29,7 +23,7 @@ pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
         )
         .split(frame.size());
 
-    let (msg, style) = if *searching {
+    let (msg, style) = if app.searching {
         (
             vec![
                 Span::raw("Press "),
@@ -42,7 +36,7 @@ pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
         (
             vec![
                 Span::raw("Press "),
-                Span::styled("q", Style::default().add_modifier(Modifier::BOLD)),
+                Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
                 Span::raw(" to exit, "),
                 Span::styled("s", Style::default().add_modifier(Modifier::BOLD)),
                 Span::raw(" to start searching."),
@@ -57,9 +51,9 @@ pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
 
     let width = chunks[0].width.max(3) - 3; // keep 2 for borders and 1 for cursor
 
-    let scroll = search_box.visual_scroll(width as usize);
-    let input = Paragraph::new(search_box.value())
-        .style(if *searching {
+    let scroll = app.search_box.visual_scroll(width as usize);
+    let input = Paragraph::new(app.search_box.value())
+        .style(if app.searching {
             Style::default().fg(Color::Yellow)
         } else {
             Style::default()
@@ -67,23 +61,30 @@ pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
         .scroll((0, scroll as u16))
         .block(Block::default().borders(Borders::ALL).title("Search"));
     frame.render_widget(input, chunks[1]);
-    if *searching {
+    if app.searching {
         // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering
         frame.set_cursor(
             // Put cursor past the end of the input text
-            chunks[1].x + ((search_box.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+            chunks[1].x + ((app.search_box.visual_cursor()).max(scroll) - scroll) as u16 + 1,
             // Move one line down, from the border to the input line
             chunks[1].y + 1,
         )
     }
 
-    let messages: Vec<ListItem> = current_commands
+    let messages: Vec<ListItem> = app
+        .current_commands
         .iter()
-        .map(|command| {
+        .enumerate()
+        .map(|(i, command)| {
             ListItem::new(format!(
                 "{} : {}",
                 command.command_text, command.description
             ))
+            .style(if app.selected == i {
+                Style::default().fg(Color::Yellow)
+            } else {
+                Style::default()
+            })
         })
         .collect();
     let messages =
