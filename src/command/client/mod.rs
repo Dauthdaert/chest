@@ -19,7 +19,7 @@ use crate::{
 pub enum Cmd {
     /// Add a new command to your Chest
     Add,
-    /// Search your existing commands in your Chest
+    /// Search the existing commands in your Chest
     Search,
 }
 
