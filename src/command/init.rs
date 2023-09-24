@@ -2,6 +2,7 @@ use clap::{Parser, ValueEnum};
 
 #[derive(Parser)]
 pub struct Cmd {
+    #[arg(value_enum)]
     shell: Shell,
 }
 

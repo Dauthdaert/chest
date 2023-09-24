@@ -17,20 +17,14 @@ pub struct App {
     pub db: SqlitePool,
 }
 
-impl Default for App {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl App {
     /// Constructs a new instance of [`App`].
-    pub fn new() -> Self {
+    pub fn new(initial_search: String) -> Self {
         let connection = db::init();
-        let commands = search_commands(&connection, "");
+        let commands = search_commands(&connection, &initial_search);
         Self {
             running: true,
-            search_box: Input::default(),
+            search_box: Input::new(initial_search),
             searching: false,
             selected: 0,
             current_commands: commands,

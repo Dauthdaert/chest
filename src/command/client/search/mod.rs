@@ -1,21 +1,52 @@
 use std::io;
 
 use ::tui::prelude::*;
+use clap::Parser;
 
 use crate::AppResult;
 
 use self::{app::App, handler::handle_key_events, tui::Tui};
 
-use super::event::{Event, EventHandler};
+use super::{
+    db,
+    event::{Event, EventHandler},
+    shell_command::ShellCommand,
+};
 
 mod app;
 mod handler;
 mod tui;
 mod ui;
 
-pub fn run() -> AppResult<()> {
+#[derive(Parser)]
+pub struct Cmd {
+    /// Open interactive search UI
+    #[arg(long, short)]
+    interactive: bool,
+    query: Vec<String>,
+}
+
+impl Cmd {
+    pub fn run(self) -> AppResult<()> {
+        if self.interactive {
+            let command = interactive(self.query)?;
+            if let Some(command) = command {
+                eprintln!("{}", command.command_text);
+            }
+        } else {
+            let command = non_interactive(self.query)?;
+            if let Some(command) = command {
+                println!("{} : {}", command.command_text, command.description);
+            }
+        };
+
+        Ok(())
+    }
+}
+
+fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     // Create an application.
-    let mut app = App::new();
+    let mut app = App::new(query.join(" "));
 
     // Initialize the terminal user interface.
     let backend = CrosstermBackend::new(io::stdout());
@@ -40,16 +71,16 @@ pub fn run() -> AppResult<()> {
     // Exit the user interface.
     Tui::<CrosstermBackend<io::Stdout>>::reset()?;
 
-    // TODO: Output the chosen command
-    if !app.current_commands.is_empty() {
-        eprintln!(
-            "{}",
-            app.current_commands
-                .get(app.selected)
-                .expect("Failed to get selected command")
-                .command_text
-        );
-    }
+    // Return the selected command
+    // Vec::get handles out of bounds access if the Vec is empty
+    Ok(app.current_commands.get(app.selected).cloned())
+}
 
-    Ok(())
+fn non_interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
+    let db = db::init();
+    let commands = db::search_commands(&db, &query.join(" "));
+
+    // Return the first matching command
+    // Vec::first returns None if the Vec is empty
+    Ok(commands.first().cloned())
 }

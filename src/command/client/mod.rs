@@ -20,7 +20,7 @@ pub enum Cmd {
     /// Add a new command to your Chest
     Add,
     /// Search the existing commands in your Chest
-    Search,
+    Search(search::Cmd),
 }
 
 impl Cmd {
@@ -48,7 +48,7 @@ impl Cmd {
 
         match self {
             Cmd::Add => add::run(),
-            Cmd::Search => search::run(),
+            Cmd::Search(cmd) => cmd.run(),
         }
     }
 }

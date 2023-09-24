@@ -21,3 +21,9 @@ impl Chest {
         self.chest.run()
     }
 }
+
+#[test]
+fn verify_chest_cli() {
+    use clap::CommandFactory;
+    Chest::command().debug_assert()
+}

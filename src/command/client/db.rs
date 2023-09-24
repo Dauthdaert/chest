@@ -39,34 +39,43 @@ pub fn init() -> SqlitePool {
     })
 }
 
+pub fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
+    task::block_on(async { get_all_commands_async(db).await })
+}
+
+async fn get_all_commands_async(db: &SqlitePool) -> Vec<ShellCommand> {
+    sqlx::query_as::<_, ShellCommand>("SELECT rowid, * FROM Commands")
+        .fetch_all(db)
+        .await
+        .unwrap_or_else(|error| {
+            error!("Error while searching for commands without search_term",);
+            debug!("{}", error);
+            Vec::new()
+        })
+}
+
 pub fn search_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
-    task::block_on(async {
-        if search_term.len() > 1 {
-            sqlx::query_as::<_, ShellCommand>(
-                "SELECT rowid, * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
-            )
-            .bind(search_term)
-            .fetch_all(db)
-            .await
-            .unwrap_or_else(|error| {
-                error!(
-                    "Error while searching for commands with search_term {}",
-                    search_term
-                );
-                debug!("{}", error);
-                Vec::new()
-            })
-        } else {
-            sqlx::query_as::<_, ShellCommand>("SELECT rowid, * FROM Commands")
-                .bind(search_term)
-                .fetch_all(db)
-                .await
-                .unwrap_or_else(|error| {
-                    error!("Error while searching for commands without search_term",);
-                    debug!("{}", error);
-                    Vec::new()
-                })
-        }
+    if search_term.len() > 1 {
+        task::block_on(async { search_commands_async(db, search_term).await })
+    } else {
+        get_all_commands(db)
+    }
+}
+
+async fn search_commands_async(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
+    sqlx::query_as::<_, ShellCommand>(
+        "SELECT rowid, * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
+    )
+    .bind(search_term)
+    .fetch_all(db)
+    .await
+    .unwrap_or_else(|error| {
+        error!(
+            "Error while searching for commands with search_term {}",
+            search_term
+        );
+        debug!("{}", error);
+        Vec::new()
     })
 }
 
