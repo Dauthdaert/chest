@@ -1,4 +1,11 @@
+use crate::dirs::db_path;
+
+use super::shell_command::ShellCommand;
+
+mod db;
+
 use async_std::task;
+pub use db::Database;
 use log::{debug, error};
 use sqlx::{
     migrate,
@@ -6,11 +13,13 @@ use sqlx::{
     SqlitePool,
 };
 
-use crate::dirs::db_path;
+pub trait Engine {
+    fn init() -> Self;
+    fn search_commands(&self, search_term: &str) -> Vec<ShellCommand>;
+    fn add_command(&self, command: ShellCommand) -> Result<(), sqlx::Error>;
+}
 
-use super::shell_command::ShellCommand;
-
-pub fn init() -> SqlitePool {
+fn create_database_connection() -> SqlitePool {
     task::block_on(async {
         let options = SqliteConnectOptions::new()
             .filename(db_path())
@@ -39,48 +48,40 @@ pub fn init() -> SqlitePool {
     })
 }
 
-pub fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
-    task::block_on(async { get_all_commands_async(db).await })
+fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
+    task::block_on(async {
+        sqlx::query_as::<_, ShellCommand>("SELECT rowid, * FROM Commands")
+            .fetch_all(db)
+            .await
+            .unwrap_or_else(|error| {
+                error!("Error while searching for commands without search_term",);
+                debug!("{}", error);
+                Vec::new()
+            })
+    })
 }
 
-async fn get_all_commands_async(db: &SqlitePool) -> Vec<ShellCommand> {
-    sqlx::query_as::<_, ShellCommand>("SELECT rowid, * FROM Commands")
+fn get_filtered_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
+    task::block_on(async {
+        sqlx::query_as::<_, ShellCommand>(
+            "SELECT rowid, * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
+        )
+        .bind(search_term)
         .fetch_all(db)
         .await
         .unwrap_or_else(|error| {
-            error!("Error while searching for commands without search_term",);
+            error!(
+                "Error while searching for commands with search_term {}",
+                search_term
+            );
             debug!("{}", error);
             Vec::new()
         })
-}
-
-pub fn search_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
-    if search_term.len() > 1 {
-        task::block_on(async { search_commands_async(db, search_term).await })
-    } else {
-        get_all_commands(db)
-    }
-}
-
-async fn search_commands_async(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
-    sqlx::query_as::<_, ShellCommand>(
-        "SELECT rowid, * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
-    )
-    .bind(search_term)
-    .fetch_all(db)
-    .await
-    .unwrap_or_else(|error| {
-        error!(
-            "Error while searching for commands with search_term {}",
-            search_term
-        );
-        debug!("{}", error);
-        Vec::new()
     })
 }
 
 #[allow(dead_code)]
-pub fn add_command(db: &SqlitePool, command: ShellCommand) -> Result<(), sqlx::Error> {
+fn add_command(db: &SqlitePool, command: ShellCommand) -> Result<(), sqlx::Error> {
     task::block_on(async {
         sqlx::query("insert into Commands (command_text, description) values ($1, $2);")
             .bind(command.command_text)

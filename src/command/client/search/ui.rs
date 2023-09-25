@@ -6,10 +6,10 @@ use tui::{
     Frame,
 };
 
-use crate::command::client::search::app::App;
+use crate::command::client::{engine::Engine, search::app::App};
 
 /// Renders the user interface widgets.
-pub fn render<B: Backend>(app: &mut App, frame: &mut Frame<'_, B>) {
+pub fn render<B: Backend, T: Engine>(app: &mut App<T>, frame: &mut Frame<'_, B>) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(2)

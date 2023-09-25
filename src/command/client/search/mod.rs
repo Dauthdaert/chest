@@ -8,7 +8,7 @@ use crate::AppResult;
 use self::{app::App, handler::handle_key_events, tui::Tui};
 
 use super::{
-    db,
+    engine::{Database, Engine},
     event::{Event, EventHandler},
     shell_command::ShellCommand,
 };
@@ -46,7 +46,7 @@ impl Cmd {
 
 fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     // Create an application.
-    let mut app = App::new(query.join(" "));
+    let mut app: App<Database> = App::new(query.join(" "));
 
     // Initialize the terminal user interface.
     let backend = CrosstermBackend::new(io::stdout());
@@ -73,12 +73,13 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
 
     // Return the selected command
     // Vec::get handles out of bounds access if the Vec is empty
+    // TODO: Return None if we didn't exit through Enter
     Ok(app.current_commands.get(app.selected).cloned())
 }
 
 fn non_interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
-    let db = db::init();
-    let commands = db::search_commands(&db, &query.join(" "));
+    let engine = Database::init();
+    let commands = engine.search_commands(&query.join(" "));
 
     // Return the first matching command
     // Vec::first returns None if the Vec is empty

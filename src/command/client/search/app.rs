@@ -1,27 +1,23 @@
-use sqlx::SqlitePool;
 use tui_input::Input;
 
-use crate::command::client::{
-    db::{self, search_commands},
-    shell_command::ShellCommand,
-};
+use crate::command::client::{engine::Engine, shell_command::ShellCommand};
 
 /// Application.
-pub struct App {
+pub struct App<T: Engine> {
     /// Is the application running?
     pub running: bool,
     pub search_box: Input,
     pub searching: bool,
     pub selected: usize,
     pub current_commands: Vec<ShellCommand>,
-    pub db: SqlitePool,
+    pub db: T,
 }
 
-impl App {
+impl<T: Engine> App<T> {
     /// Constructs a new instance of [`App`].
     pub fn new(initial_search: String) -> Self {
-        let connection = db::init();
-        let commands = search_commands(&connection, &initial_search);
+        let connection = T::init();
+        let commands = connection.search_commands(&initial_search);
         Self {
             running: true,
             search_box: Input::new(initial_search),
@@ -47,5 +43,9 @@ impl App {
     pub fn exit_search(&mut self) {
         self.searching = false;
         self.selected = 0;
+    }
+
+    pub fn update_commands(&mut self) {
+        self.current_commands = self.db.search_commands(self.search_box.value());
     }
 }

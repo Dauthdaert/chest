@@ -2,13 +2,12 @@ use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind,
 use log::debug;
 use tui_input::backend::crossterm::EventHandler;
 
-use crate::{
-    command::client::{db::search_commands, search::app::App},
-    AppResult,
-};
+use crate::{command::client::engine::Engine, AppResult};
+
+use super::app::App;
 
 /// Handles the key events and updates the state of [`App`].
-pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
+pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> AppResult<()> {
     // Don't process key events that aren't presses
     if key_event.kind != KeyEventKind::Press {
         return Ok(());
@@ -28,8 +27,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
                     app.search_box.handle_event(&CrosstermEvent::Key(key_event));
 
                     // Update commands based on current search
-                    let search_term = app.search_box.value().to_string();
-                    app.current_commands = search_commands(&app.db, &search_term);
+                    app.update_commands();
                 }
             }
             // Handle all other events as input to the search box
@@ -37,8 +35,7 @@ pub fn handle_key_events(key_event: KeyEvent, app: &mut App) -> AppResult<()> {
                 app.search_box.handle_event(&CrosstermEvent::Key(key_event));
 
                 // Update commands based on current search
-                let search_term = app.search_box.value().to_string();
-                app.current_commands = search_commands(&app.db, &search_term);
+                app.update_commands();
             }
         }
     } else {

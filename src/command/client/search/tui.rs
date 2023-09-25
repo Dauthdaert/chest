@@ -6,6 +6,7 @@ use tui::backend::Backend;
 use tui::prelude::CrosstermBackend;
 use tui::Terminal;
 
+use crate::command::client::engine::Engine;
 use crate::command::client::event::EventHandler;
 use crate::AppResult;
 
@@ -54,7 +55,7 @@ impl<B: Backend> Tui<B> {
     ///
     /// [`Draw`]: tui::Terminal::draw
     /// [`rendering`]: crate::ui:render
-    pub fn draw(&mut self, app: &mut App) -> AppResult<()> {
+    pub fn draw<T: Engine>(&mut self, app: &mut App<T>) -> AppResult<()> {
         self.terminal.draw(|frame| ui::render(app, frame))?;
         Ok(())
     }
