@@ -1,6 +1,6 @@
 # Source this in your ~/.config/nushell/config.nu
 
-def _chest_search_cmd [... flags: string] {
+def _chest_search_cmd [...flags: string] {
   ([
     `commandline (run-external --redirect-stderr chest search`,
     ($flags | append [--interactive, --] | each {|e| $'"($e)"'}),
