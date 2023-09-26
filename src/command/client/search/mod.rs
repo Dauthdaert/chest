@@ -27,6 +27,7 @@ pub struct Cmd {
     /// Open interactive search UI
     #[arg(long, short)]
     interactive: bool,
+    /// Search query
     query: Vec<String>,
 }
 
@@ -93,7 +94,7 @@ fn non_interactive(query: Vec<String>) -> AppResult<Vec<ShellCommand>> {
     let engine = Database::init();
     let mut commands = engine.search_commands(&query.join(" "));
 
-    // Keep the best 5 matches
+    // Keep the 5 best matches
     commands.truncate(5);
 
     // Return the first matching command

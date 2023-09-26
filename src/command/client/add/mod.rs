@@ -10,7 +10,9 @@ use crate::{
 
 #[derive(Parser)]
 pub struct Cmd {
+    /// Full command
     command_text: String,
+    /// Description of the command
     description: String,
 }
 
