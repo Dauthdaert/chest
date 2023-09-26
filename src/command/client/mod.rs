@@ -17,7 +17,7 @@ use crate::{dirs::log_path, AppResult};
 #[derive(Subcommand)]
 pub enum Cmd {
     /// Add a new command to your Chest
-    Add,
+    Add(add::Cmd),
     /// Search the existing commands in your Chest
     Search(search::Cmd),
 }
@@ -47,7 +47,7 @@ impl Cmd {
         .expect("Unable to start logger");
 
         match self {
-            Cmd::Add => add::run(),
+            Cmd::Add(cmd) => cmd.run(),
             Cmd::Search(cmd) => cmd.run(),
         }
     }
