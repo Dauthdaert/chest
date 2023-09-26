@@ -5,7 +5,11 @@ use clap::Parser;
 
 use crate::AppResult;
 
-use self::{app::App, handler::handle_key_events, tui::Tui};
+use self::{
+    app::{App, RunStatus},
+    handler::handle_key_events,
+    tui::Tui,
+};
 
 use super::{
     engine::{Database, Engine},
@@ -61,7 +65,7 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     tui.init()?;
 
     // Start the main loop.
-    while app.running {
+    while app.status.running() {
         // Render the user interface.
         tui.draw(&mut app)?;
         // Handle events.
@@ -76,10 +80,13 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     // Exit the user interface.
     Tui::<CrosstermBackend<io::Stdout>>::reset()?;
 
-    // Return the selected command
+    // Return the selected command if the selection was confirmed
     // Vec::get handles out of bounds access if the Vec is empty
-    // TODO: Return None if we didn't exit through Enter
-    Ok(app.current_commands.get(app.selected).cloned())
+    if app.status == RunStatus::Confirmed {
+        Ok(app.current_commands.get(app.selected).cloned())
+    } else {
+        Ok(None)
+    }
 }
 
 fn non_interactive(query: Vec<String>) -> AppResult<Vec<ShellCommand>> {

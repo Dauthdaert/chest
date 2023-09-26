@@ -22,7 +22,7 @@ pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> Ap
             // Exit application on `Ctrl-C`
             KeyCode::Char('c') | KeyCode::Char('C') => {
                 if key_event.modifiers == KeyModifiers::CONTROL {
-                    app.quit();
+                    app.cancel();
                 } else {
                     app.search_box.handle_event(&CrosstermEvent::Key(key_event));
 
@@ -42,12 +42,12 @@ pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> Ap
         match key_event.code {
             // Exit application on `ESC`
             KeyCode::Esc => {
-                app.quit();
+                app.cancel();
             }
             // Exit application on `Ctrl-C`
             KeyCode::Char('c') | KeyCode::Char('C') => {
                 if key_event.modifiers == KeyModifiers::CONTROL {
-                    app.quit();
+                    app.cancel();
                 }
             }
             // Enter search on 's'
@@ -56,7 +56,7 @@ pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> Ap
             }
             // Output command on 'Enter'
             KeyCode::Enter => {
-                app.quit();
+                app.confirm();
             }
             KeyCode::Up => {
                 app.selected = 0.max(app.selected.saturating_sub(1));
