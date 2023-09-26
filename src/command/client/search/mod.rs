@@ -34,9 +34,14 @@ impl Cmd {
                 eprintln!("{}", command.command_text);
             }
         } else {
-            let command = non_interactive(self.query)?;
-            if let Some(command) = command {
-                println!("{} : {}", command.command_text, command.description);
+            let commands = non_interactive(self.query)?;
+            if commands.is_empty() {
+                println!("No matches");
+            } else {
+                println!("Closest matches:");
+                for command in commands {
+                    println!("{} : {}", command.command_text, command.description);
+                }
             }
         };
 
@@ -77,11 +82,13 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     Ok(app.current_commands.get(app.selected).cloned())
 }
 
-fn non_interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
+fn non_interactive(query: Vec<String>) -> AppResult<Vec<ShellCommand>> {
     let engine = Database::init();
-    let commands = engine.search_commands(&query.join(" "));
+    let mut commands = engine.search_commands(&query.join(" "));
+
+    // Keep the best 5 matches
+    commands.truncate(5);
 
     // Return the first matching command
-    // Vec::first returns None if the Vec is empty
-    Ok(commands.first().cloned())
+    Ok(commands)
 }
