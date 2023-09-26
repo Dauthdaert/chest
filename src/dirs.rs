@@ -13,6 +13,7 @@ fn project_dir() -> ProjectDirs {
         .clone()
 }
 
+#[allow(dead_code)]
 pub fn data_dir() -> PathBuf {
     DATA_DIR
         .get_or_init(|| project_dir().data_dir().to_path_buf())
@@ -20,9 +21,17 @@ pub fn data_dir() -> PathBuf {
 }
 
 pub fn db_path() -> PathBuf {
-    data_dir().join("commands.db")
+    #[cfg(debug_assertions)]
+    return PathBuf::new().join("commands.db");
+
+    #[cfg(not(debug_assertions))]
+    return data_dir().join("commands.db");
 }
 
 pub fn log_path() -> PathBuf {
-    data_dir().join("log.txt")
+    #[cfg(debug_assertions)]
+    return PathBuf::new().join("log.txt");
+
+    #[cfg(not(debug_assertions))]
+    return data_dir().join("log.txt");
 }

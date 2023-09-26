@@ -10,10 +10,9 @@ use clap::Subcommand;
 use log::LevelFilter;
 use simplelog::{Config, WriteLogger};
 
-use crate::{
-    dirs::{data_dir, log_path},
-    AppResult,
-};
+#[cfg(not(debug_assertions))]
+use crate::dirs::data_dir;
+use crate::{dirs::log_path, AppResult};
 
 #[derive(Subcommand)]
 pub enum Cmd {
@@ -26,6 +25,7 @@ pub enum Cmd {
 impl Cmd {
     pub fn run(self) -> AppResult<()> {
         // Initialize data directory if it's missing
+        #[cfg(not(debug_assertions))]
         std::fs::create_dir_all(data_dir()).expect("Unable to create data directory");
 
         let filter = if cfg!(debug_assertions) {

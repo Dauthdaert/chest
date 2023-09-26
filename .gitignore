@@ -11,3 +11,7 @@ target/
 
 # Environment variables
 .env
+
+# Dev files
+commands.db
+log.txt
