@@ -47,12 +47,12 @@ impl<T: Engine> App<T> {
     /// Handles the tick event of the terminal.
     pub fn tick(&self) {}
 
-    /// Set status to RunState::Confirmed to quit the application and output the selected command.
+    /// Set status to `RunState::Confirmed` to quit the application and output the selected command.
     pub fn confirm(&mut self) {
         self.status = RunStatus::Confirmed;
     }
 
-    /// Set status to RunState::Canceled to quit the application without outputting the selected command.
+    /// Set status to `RunState::Canceled` to quit the application without outputting the selected command.
     pub fn cancel(&mut self) {
         self.status = RunStatus::Canceled;
     }
