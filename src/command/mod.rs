@@ -1,4 +1,5 @@
 mod client;
+mod info;
 mod init;
 mod reset;
 
@@ -14,6 +15,8 @@ pub enum ChestCommand {
     Init(init::Cmd),
     /// Resets saved commands database
     Reset,
+    /// Print data and config directory
+    Info,
 }
 
 impl ChestCommand {
@@ -25,6 +28,10 @@ impl ChestCommand {
             }
             ChestCommand::Client(client) => client.run(),
             ChestCommand::Reset => reset::run(),
+            ChestCommand::Info => {
+                info::run();
+                Ok(())
+            }
         }
     }
 }
