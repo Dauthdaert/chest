@@ -1,5 +1,6 @@
 mod client;
 mod init;
+mod reset;
 
 use clap::Subcommand;
 
@@ -11,6 +12,8 @@ pub enum ChestCommand {
     Client(client::Cmd),
     /// Print shell scripts to install Chest
     Init(init::Cmd),
+    /// Resets saved commands database
+    Reset,
 }
 
 impl ChestCommand {
@@ -21,6 +24,7 @@ impl ChestCommand {
                 Ok(())
             }
             ChestCommand::Client(client) => client.run(),
+            ChestCommand::Reset => reset::run(),
         }
     }
 }
