@@ -4,15 +4,9 @@ mod event;
 mod search;
 mod shell_command;
 
-use std::fs::File;
-
 use clap::Subcommand;
-use log::LevelFilter;
-use simplelog::{Config, WriteLogger};
 
-#[cfg(not(debug_assertions))]
-use crate::dirs::data_dir;
-use crate::{dirs::log_path, AppResult};
+use crate::AppResult;
 
 #[derive(Subcommand)]
 pub enum Cmd {
@@ -24,28 +18,6 @@ pub enum Cmd {
 
 impl Cmd {
     pub fn run(self) -> AppResult<()> {
-        // Initialize data directory if it's missing
-        #[cfg(not(debug_assertions))]
-        std::fs::create_dir_all(data_dir()).expect("Unable to create data directory");
-
-        let filter = if cfg!(debug_assertions) {
-            LevelFilter::Debug
-        } else {
-            LevelFilter::Warn
-        };
-
-        WriteLogger::init(
-            filter,
-            Config::default(),
-            File::options()
-                .write(true)
-                .create(true)
-                .append(true)
-                .open(log_path())
-                .expect("Unable to open log file"),
-        )
-        .expect("Unable to start logger");
-
         match self {
             Cmd::Add(cmd) => cmd.run(),
             Cmd::Search(cmd) => cmd.run(),
