@@ -54,7 +54,7 @@ impl<B: Backend> Tui<B> {
     /// [`Draw`] the terminal interface by [`rendering`] the widgets.
     ///
     /// [`Draw`]: tui::Terminal::draw
-    /// [`rendering`]: crate::ui:render
+    /// [`rendering`]: crate::command::client::search::ui::render
     pub fn draw<T: Engine>(&mut self, app: &mut App<T>) -> AppResult<()> {
         self.terminal.draw(|frame| ui::render(app, frame))?;
         Ok(())
