@@ -4,8 +4,10 @@ use xshell::{cmd, Shell};
 
 use bitflags::bitflags;
 
+#[derive(Clone, Copy)]
+struct Check(u32);
 bitflags! {
-    struct Check: u32 {
+    impl Check: u32 {
         const FORMAT = 0b00000001;
         const CLIPPY = 0b00000010;
         const TEST = 0b00001000;
