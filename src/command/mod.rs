@@ -1,4 +1,5 @@
 mod client;
+mod info;
 mod init;
 
 use clap::Subcommand;
@@ -11,6 +12,8 @@ pub enum ChestCommand {
     Client(client::Cmd),
     /// Print shell scripts to install Chest
     Init(init::Cmd),
+    /// Print data and config directory
+    Info,
 }
 
 impl ChestCommand {
@@ -21,6 +24,10 @@ impl ChestCommand {
                 Ok(())
             }
             ChestCommand::Client(client) => client.run(),
+            ChestCommand::Info => {
+                info::run();
+                Ok(())
+            }
         }
     }
 }
