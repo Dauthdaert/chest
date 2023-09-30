@@ -68,7 +68,7 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     // Start the main loop.
     while app.status.running() {
         // Render the user interface.
-        tui.draw(&mut app)?;
+        tui.draw(&app)?;
         // Handle events.
         match tui.events.next()? {
             Event::Tick => app.tick(),

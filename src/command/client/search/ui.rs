@@ -9,7 +9,7 @@ use tui::{
 use crate::command::client::{engine::Engine, search::app::App};
 
 /// Renders the user interface widgets.
-pub fn render<B: Backend, T: Engine>(app: &mut App<T>, frame: &mut Frame<'_, B>) {
+pub fn render<B: Backend, T: Engine>(app: &App<T>, frame: &mut Frame<'_, B>) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(2)
@@ -28,7 +28,7 @@ pub fn render<B: Backend, T: Engine>(app: &mut App<T>, frame: &mut Frame<'_, B>)
     command_list(chunks[2], app, frame);
 }
 
-fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mut Frame<B>) {
+fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &App<T>, frame: &mut Frame<B>) {
     let [list_chunk, command_chunk] = *Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Length(35), Constraint::Min(1)].as_ref())
@@ -54,7 +54,7 @@ fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mu
                 } else {
                     Style::default()
                 };
-                ListItem::new(format!("{}", command.name)).style(style)
+                ListItem::new(command.name.to_string()).style(style)
             })
             .collect::<Vec<ListItem>>(),
     )
@@ -92,7 +92,7 @@ fn help_text<B: Backend>(chunk: Rect, frame: &mut Frame<B>) {
     frame.render_widget(help_message, chunk);
 }
 
-fn search_box<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mut Frame<B>) {
+fn search_box<T: Engine, B: Backend>(chunk: Rect, app: &App<T>, frame: &mut Frame<B>) {
     // keep 2 for borders and 1 for cursor
     let width = chunk.width.max(3) - 3;
 
