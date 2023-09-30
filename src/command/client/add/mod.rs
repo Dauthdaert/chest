@@ -10,6 +10,8 @@ use crate::{
 
 #[derive(Parser)]
 pub struct Cmd {
+    /// Name of the command in Chest
+    name: String,
     /// Full command
     command_text: String,
     /// Description of the command
@@ -20,7 +22,7 @@ impl Cmd {
     pub fn run(self) -> AppResult<()> {
         let engine = Database::init();
         Ok(engine.add_command(ShellCommand {
-            rowid: None,
+            name: self.name,
             command_text: self.command_text,
             description: self.description,
         })?)

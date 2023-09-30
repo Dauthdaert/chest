@@ -50,7 +50,7 @@ fn create_database_connection() -> SqlitePool {
 
 fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
     task::block_on(async {
-        sqlx::query_as::<_, ShellCommand>("SELECT rowid, * FROM Commands")
+        sqlx::query_as::<_, ShellCommand>("SELECT * FROM Commands")
             .fetch_all(db)
             .await
             .unwrap_or_else(|error| {
@@ -64,7 +64,7 @@ fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
 fn get_filtered_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand> {
     task::block_on(async {
         sqlx::query_as::<_, ShellCommand>(
-            "SELECT rowid, * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
+            "SELECT * FROM Commands WHERE Commands MATCH $1 ORDER BY rank",
         )
         .bind(search_term)
         .fetch_all(db)
@@ -83,7 +83,8 @@ fn get_filtered_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand
 #[allow(dead_code)]
 fn add_command(db: &SqlitePool, command: ShellCommand) -> Result<(), sqlx::Error> {
     task::block_on(async {
-        sqlx::query("insert into Commands (command_text, description) values ($1, $2);")
+        sqlx::query("insert into Commands (name, command_text, description) values ($1, $2, $3);")
+            .bind(command.name)
             .bind(command.command_text)
             .bind(command.description)
             .execute(db)

@@ -23,7 +23,6 @@ pub struct App<T: Engine> {
     /// Is the application running?
     pub status: RunStatus,
     pub search_box: Input,
-    pub searching: bool,
     pub selected: usize,
     pub current_commands: Vec<ShellCommand>,
     pub db: T,
@@ -37,7 +36,6 @@ impl<T: Engine> App<T> {
         Self {
             status: RunStatus::Running,
             search_box: Input::new(initial_search),
-            searching: false,
             selected: 0,
             current_commands: commands,
             db: connection,
@@ -57,19 +55,13 @@ impl<T: Engine> App<T> {
         self.status = RunStatus::Canceled;
     }
 
-    /// Enter search mode.
-    pub fn enter_search(&mut self) {
-        self.searching = true;
-    }
-
-    /// Exit search mode. Selects the first command.
-    pub fn exit_search(&mut self) {
-        self.searching = false;
-        self.selected = 0;
-    }
-
     /// Update current commands based on search query.
     pub fn update_commands(&mut self) {
         self.current_commands = self.db.search_commands(self.search_box.value());
+        self.selected = self
+            .current_commands
+            .len()
+            .saturating_sub(1)
+            .min(self.selected);
     }
 }

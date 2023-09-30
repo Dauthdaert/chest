@@ -1,7 +1,6 @@
 #[derive(sqlx::FromRow, Clone)]
 pub struct ShellCommand {
-    #[allow(dead_code)]
-    pub rowid: Option<i64>,
+    pub name: String,
     pub command_text: String,
     pub description: String,
 }

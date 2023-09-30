@@ -23,71 +23,85 @@ pub fn render<B: Backend, T: Engine>(app: &mut App<T>, frame: &mut Frame<'_, B>)
         )
         .split(frame.size());
 
-    let (msg, style) = if app.searching {
-        (
-            vec![
-                Span::raw("Press "),
-                Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to stop searching"),
-            ],
-            Style::default(),
-        )
-    } else {
-        (
-            vec![
-                Span::raw("Press "),
-                Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to exit, "),
-                Span::styled("s", Style::default().add_modifier(Modifier::BOLD)),
-                Span::raw(" to start searching."),
-            ],
-            Style::default().add_modifier(Modifier::RAPID_BLINK),
-        )
-    };
+    help_text(chunks[0], frame);
+    search_box(chunks[1], app, frame);
+    command_list(chunks[2], app, frame);
+}
+
+fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mut Frame<B>) {
+    let [list_chunk, command_chunk] = *Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Length(35), Constraint::Min(1)].as_ref())
+        .split(chunk) else { unreachable!("Failed to split command_list chunks")};
+    let [text_chunk, description_chunk] = *Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Length(3), Constraint::Min(1)].as_ref())
+        .split(command_chunk) else { unreachable!()};
+
+    let commands = List::new(
+        app.current_commands
+            .iter()
+            .enumerate()
+            .map(|(i, command)| {
+                let style = if app.selected == i {
+                    Style::default().fg(Color::Yellow)
+                } else {
+                    Style::default()
+                };
+                ListItem::new(format!("{}", command.name)).style(style)
+            })
+            .collect::<Vec<ListItem>>(),
+    )
+    .block(Block::default().borders(Borders::ALL).title("Commands"));
+    frame.render_widget(commands, list_chunk);
+
+    let selected_command = app.current_commands.get(app.selected);
+    let command_text = Paragraph::new(selected_command.map_or("", |command| &command.command_text))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title("Stored command"),
+        );
+    frame.render_widget(command_text, text_chunk);
+
+    let description = Paragraph::new(selected_command.map_or("", |command| &command.description))
+        .block(Block::default().borders(Borders::ALL).title("Description"));
+    frame.render_widget(description, description_chunk);
+}
+
+fn help_text<B: Backend>(chunk: Rect, frame: &mut Frame<B>) {
+    let (msg, style) = (
+        vec![
+            Span::raw("Press "),
+            Span::styled("Esc", Style::default().add_modifier(Modifier::BOLD)),
+            Span::raw(" to exit, "),
+            Span::styled("Enter", Style::default().add_modifier(Modifier::BOLD)),
+            Span::raw(" to confirm selection."),
+        ],
+        Style::default().add_modifier(Modifier::RAPID_BLINK),
+    );
     let mut text = Text::from(Line::from(msg));
     text.patch_style(style);
     let help_message = Paragraph::new(text);
-    frame.render_widget(help_message, chunks[0]);
+    frame.render_widget(help_message, chunk);
+}
 
-    let width = chunks[0].width.max(3) - 3; // keep 2 for borders and 1 for cursor
+fn search_box<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mut Frame<B>) {
+    // keep 2 for borders and 1 for cursor
+    let width = chunk.width.max(3) - 3;
 
     let scroll = app.search_box.visual_scroll(width as usize);
     let input = Paragraph::new(app.search_box.value())
-        .style(if app.searching {
-            Style::default().fg(Color::Yellow)
-        } else {
-            Style::default()
-        })
+        .style(Style::default())
         .scroll((0, scroll as u16))
-        .block(Block::default().borders(Borders::ALL).title("Search"));
-    frame.render_widget(input, chunks[1]);
-    if app.searching {
-        // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering
-        frame.set_cursor(
-            // Put cursor past the end of the input text
-            chunks[1].x + ((app.search_box.visual_cursor()).max(scroll) - scroll) as u16 + 1,
-            // Move one line down, from the border to the input line
-            chunks[1].y + 1,
-        )
-    }
+        .block(Block::default().borders(Borders::ALL).title("Chest"));
+    frame.render_widget(input, chunk);
 
-    let messages: Vec<ListItem> = app
-        .current_commands
-        .iter()
-        .enumerate()
-        .map(|(i, command)| {
-            ListItem::new(format!(
-                "{} : {}",
-                command.command_text, command.description
-            ))
-            .style(if app.selected == i {
-                Style::default().fg(Color::Yellow)
-            } else {
-                Style::default()
-            })
-        })
-        .collect();
-    let messages =
-        List::new(messages).block(Block::default().borders(Borders::ALL).title("Commands"));
-    frame.render_widget(messages, chunks[2]);
+    // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering
+    frame.set_cursor(
+        // Put cursor past the end of the input text
+        chunk.x + ((app.search_box.visual_cursor()).max(scroll) - scroll) as u16 + 1,
+        // Move one line down, from the border to the input line
+        chunk.y + 1,
+    );
 }
