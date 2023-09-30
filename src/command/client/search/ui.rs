@@ -32,11 +32,17 @@ fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &mut App<T>, frame: &mu
     let [list_chunk, command_chunk] = *Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Length(35), Constraint::Min(1)].as_ref())
-        .split(chunk) else { unreachable!("Failed to split command_list chunks")};
+        .split(chunk)
+    else {
+        unreachable!("Failed to split command_list chunks")
+    };
     let [text_chunk, description_chunk] = *Layout::default()
         .direction(Direction::Vertical)
         .constraints([Constraint::Length(3), Constraint::Min(1)].as_ref())
-        .split(command_chunk) else { unreachable!()};
+        .split(command_chunk)
+    else {
+        unreachable!()
+    };
 
     let commands = List::new(
         app.current_commands
