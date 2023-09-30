@@ -10,7 +10,7 @@ use log::{debug, error};
 use sqlx::{
     migrate,
     sqlite::{SqliteConnectOptions, SqlitePoolOptions},
-    SqlitePool,
+    Error, SqlitePool,
 };
 
 pub trait Engine: Sized {
@@ -20,32 +20,31 @@ pub trait Engine: Sized {
     fn add_command(&self, command: ShellCommand) -> AppResult<()>;
 }
 
-fn create_database_connection() -> SqlitePool {
+fn create_database_connection() -> Result<SqlitePool, Error> {
     task::block_on(async {
         let options = SqliteConnectOptions::new()
             .filename(db_path())
             .create_if_missing(true)
             .optimize_on_close(true, None);
-        let connection = SqlitePoolOptions::new().connect_with(options).await;
-        let connection = match connection {
-            Ok(db) => db,
-            Err(error) => {
+        let connection = SqlitePoolOptions::new()
+            .connect_with(options)
+            .await
+            .map_err(|error| {
                 error!(
                     "Unable to open or create database at path : {}",
                     db_path().display()
                 );
                 debug!("{}", error);
-                panic!("Unable to open or create database");
-            }
-        };
+                error
+            })?;
 
-        if let Err(error) = migrate!().run(&connection).await {
+        migrate!().run(&connection).await.map_err(|error| {
             error!("Unable to migrate database");
             debug!("{}", error);
-            panic!("Unable to migrate database");
-        }
+            error
+        })?;
 
-        connection
+        Ok(connection)
     })
 }
 
@@ -103,6 +102,6 @@ fn add_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
             .bind(command.description)
             .execute(db)
             .await
-            .map(|_res| ())
+            .map(|_ok| ())
     })?)
 }

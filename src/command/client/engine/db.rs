@@ -12,7 +12,7 @@ pub struct Database {
 impl Engine for Database {
     fn init() -> AppResult<Self> {
         Ok(Self {
-            connection: create_database_connection(),
+            connection: create_database_connection()?,
         })
     }
 
