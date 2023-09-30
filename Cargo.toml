@@ -25,3 +25,4 @@ directories = "5.0"
 log = { version = "0.4", features = ["std"] }
 simplelog = "0.12"
 clap = { version = "4.4.5", features = ["derive"] }
+promptly = "0.3.1"

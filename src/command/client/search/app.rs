@@ -31,7 +31,7 @@ pub struct App<T: Engine> {
 impl<T: Engine> App<T> {
     /// Constructs a new instance of [`App`].
     pub fn new(initial_search: String) -> Self {
-        let connection = T::init();
+        let connection = T::init().expect("Failed to init database");
         let commands = connection.search_commands(&initial_search);
         Self {
             status: RunStatus::Running,

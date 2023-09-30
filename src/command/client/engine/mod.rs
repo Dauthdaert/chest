@@ -1,4 +1,4 @@
-use crate::dirs::db_path;
+use crate::{dirs::db_path, AppResult};
 
 use super::shell_command::ShellCommand;
 
@@ -13,10 +13,11 @@ use sqlx::{
     SqlitePool,
 };
 
-pub trait Engine {
-    fn init() -> Self;
+pub trait Engine: Sized {
+    fn init() -> AppResult<Self>;
     fn search_commands(&self, search_term: &str) -> Vec<ShellCommand>;
-    fn add_command(&self, command: ShellCommand) -> Result<(), sqlx::Error>;
+    fn get_command(&self, name: &str) -> Option<ShellCommand>;
+    fn add_command(&self, command: ShellCommand) -> AppResult<()>;
 }
 
 fn create_database_connection() -> SqlitePool {
@@ -80,15 +81,28 @@ fn get_filtered_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand
     })
 }
 
-#[allow(dead_code)]
-fn add_command(db: &SqlitePool, command: ShellCommand) -> Result<(), sqlx::Error> {
+fn get_command(db: &SqlitePool, name: &str) -> Option<ShellCommand> {
     task::block_on(async {
-        sqlx::query("insert into Commands (name, command_text, description) values ($1, $2, $3);")
+        sqlx::query_as::<_, ShellCommand>("SELECT * FROM Commands WHERE name = $1")
+            .bind(name)
+            .fetch_optional(db)
+            .await
+            .unwrap_or_else(|error| {
+                error!("Error while searching for a command with name {}", name);
+                debug!("{}", error);
+                None
+            })
+    })
+}
+
+fn add_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
+    Ok(task::block_on(async {
+        sqlx::query("INSERT INTO Commands (name, command_text, description) VALUES ($1, $2, $3);")
             .bind(command.name)
             .bind(command.command_text)
             .bind(command.description)
             .execute(db)
             .await
-    })
-    .map(|_res| ())
+            .map(|_res| ())
+    })?)
 }

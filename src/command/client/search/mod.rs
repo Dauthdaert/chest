@@ -91,7 +91,7 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
 }
 
 fn non_interactive(query: Vec<String>) -> AppResult<Vec<ShellCommand>> {
-    let engine = Database::init();
+    let engine = Database::init()?;
     let mut commands = engine.search_commands(&query.join(" "));
 
     // Keep the 5 best matches
