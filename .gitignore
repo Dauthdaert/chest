@@ -13,5 +13,7 @@ target/
 .env
 
 # Dev files
-commands.db
+*.db
+*.db-shm
+*.db-wal
 log.txt
