@@ -3,7 +3,8 @@ chest is a multi-platform CLI Command organizer inspired by hoard.
 
 It allows you to save commands that are too complicated or long to remember.
 When you add a command to chest, it remembers:
-- the text of the command
+- a name for the command
+- the command
 - a description you provide
 
 Next time you need a command, search for it using chest's search feature to quickly find it again.
@@ -32,8 +33,9 @@ source ~/init-chest.nu
 ### Add
 In order to add a command to your chest database, use the following command.
 ```
-chest add <COMMAND_TEXT> <COMMAND_DESCRIPTION>
+chest add
 ```
+You will be prompted to fill in the necessary information.
 
 ### Search
 Once a command has been added to your chest, there are two ways to search for it.
@@ -55,19 +57,17 @@ chest search --interactive <QUERY>
 Finally, if chest is installed as a **shell plugin**, interactive search is available through a keybinding (default Ctrl-h).
 Additionaly, if chest is invoked through the keybinding, confirming a selection adds the selected command to your next prompt.
 
+### Reset
+If you get a database error after an update, it may be necessary to reset your saved commands. You can do so using the following command.
+```
+chest reset
+```
+
 
 ## Keybindings
 #### Open from shell
 ```
 <Ctrl-h>
-```
-#### Edit search query
-```
-<s>
-```
-#### Return to list
-```
-<Esc>
 ```
 #### Next or previous command in list
 ```
