@@ -53,7 +53,7 @@ fn create_database_connection() -> Result<SqlitePool, Error> {
 
 fn get_all_commands(db: &SqlitePool) -> Vec<ShellCommand> {
     task::block_on(async {
-        sqlx::query_as::<_, ShellCommand>("SELECT * FROM Commands")
+        sqlx::query_as::<_, ShellCommand>("SELECT * FROM Commands ORDER BY name")
             .fetch_all(db)
             .await
             .unwrap_or_else(|error| {
