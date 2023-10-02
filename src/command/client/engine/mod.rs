@@ -19,6 +19,7 @@ pub trait Engine: Sized {
     fn get_command(&self, name: &str) -> Option<ShellCommand>;
     fn add_command(&self, command: ShellCommand) -> AppResult<()>;
     fn update_command(&self, command: ShellCommand) -> AppResult<()>;
+    fn remove_command(&self, name: &str) -> AppResult<()>;
 }
 
 fn create_database_connection() -> Result<SqlitePool, Error> {
@@ -113,6 +114,16 @@ fn update_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
             .bind(command.name)
             .bind(command.command_text)
             .bind(command.description)
+            .execute(db)
+            .await
+            .map(|_ok| ())
+    })?)
+}
+
+fn remove_command(db: &SqlitePool, name: &str) -> AppResult<()> {
+    Ok(task::block_on(async {
+        sqlx::query("DELETE FROM Commands WHERE name = $1")
+            .bind(name)
             .execute(db)
             .await
             .map(|_ok| ())
