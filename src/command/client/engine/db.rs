@@ -1,6 +1,6 @@
 use super::{
     add_command, create_database_connection, get_all_commands, get_command, get_filtered_commands,
-    update_command, Engine,
+    remove_command, update_command, Engine,
 };
 use crate::{command::client::shell_command::ShellCommand, AppResult};
 use sqlx::SqlitePool;
@@ -34,5 +34,9 @@ impl Engine for Database {
 
     fn update_command(&self, command: ShellCommand) -> AppResult<()> {
         update_command(&self.connection, command)
+    }
+
+    fn remove_command(&self, name: &str) -> AppResult<()> {
+        remove_command(&self.connection, name)
     }
 }
