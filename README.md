@@ -16,7 +16,7 @@ Set up a Rust toolchain using [rustup](https://rustup.rs/), clone the repository
 cargo install --path .
 ```
 
-## Autocomplete with Shell plugin
+## Shell Integration
 Install `chest` as a plugin to enable deeper shell integration.
 
 #### Nushell
@@ -36,6 +36,25 @@ In order to add a command to your chest database, use the following command.
 chest add
 ```
 You will be prompted to fill in the necessary information.
+
+### Update
+In order to update a command in your chest database, use the following command.
+```
+chest update
+```
+You will be prompted to fill in the updated information.
+
+### Remove/Delete
+In order to remove a command from your chest database, use the following command.
+```
+chest remove
+```
+You will be prompted for the name of the command to remove.
+
+A delete alias is also provided.
+```
+chest delete
+```
 
 ### Search
 Once a command has been added to your chest, there are two ways to search for it.
