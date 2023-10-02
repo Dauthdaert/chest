@@ -18,6 +18,7 @@ pub trait Engine: Sized {
     fn search_commands(&self, search_term: &str) -> Vec<ShellCommand>;
     fn get_command(&self, name: &str) -> Option<ShellCommand>;
     fn add_command(&self, command: ShellCommand) -> AppResult<()>;
+    fn update_command(&self, command: ShellCommand) -> AppResult<()>;
 }
 
 fn create_database_connection() -> Result<SqlitePool, Error> {
@@ -97,6 +98,18 @@ fn get_command(db: &SqlitePool, name: &str) -> Option<ShellCommand> {
 fn add_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
     Ok(task::block_on(async {
         sqlx::query("INSERT INTO Commands (name, command_text, description) VALUES ($1, $2, $3);")
+            .bind(command.name)
+            .bind(command.command_text)
+            .bind(command.description)
+            .execute(db)
+            .await
+            .map(|_ok| ())
+    })?)
+}
+
+fn update_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
+    Ok(task::block_on(async {
+        sqlx::query("UPDATE Commands SET command_text=$2, description=$3 WHERE name=$1;")
             .bind(command.name)
             .bind(command.command_text)
             .bind(command.description)
