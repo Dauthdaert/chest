@@ -17,6 +17,7 @@ pub enum Cmd {
     /// Update an existing command in your Chest
     Update(update::Cmd),
     /// Remove an existing command from your Chest
+    #[command(alias("delete"))]
     Remove(remove::Cmd),
     /// Search the existing commands in your Chest
     Search(search::Cmd),
