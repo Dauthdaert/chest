@@ -34,15 +34,18 @@ pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> Ap
             app.confirm();
         }
         KeyCode::Up => {
-            app.selected = 0.max(app.selected.saturating_sub(1));
+            app.selected = app
+                .selected
+                .checked_sub(1)
+                .unwrap_or_else(|| app.current_commands.len().saturating_sub(1));
             debug!("selected idx : {}", app.selected);
         }
         KeyCode::Down => {
-            app.selected = app
-                .current_commands
-                .len()
-                .saturating_sub(1)
-                .min(app.selected.saturating_add(1));
+            app.selected = if app.selected < app.current_commands.len().saturating_sub(1) {
+                app.selected.saturating_add(1)
+            } else {
+                0
+            };
             debug!("selected idx : {}", app.selected);
         }
         // Handle all other events as input to the search box
