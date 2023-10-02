@@ -16,6 +16,7 @@ use sqlx::{
 pub trait Engine: Sized {
     fn init() -> AppResult<Self>;
     fn search_commands(&self, search_term: &str) -> Vec<ShellCommand>;
+    fn search_commands_strict(&self, name: &str) -> Option<ShellCommand>;
     fn get_command(&self, name: &str) -> Option<ShellCommand>;
     fn add_command(&self, command: ShellCommand) -> AppResult<()>;
     fn update_command(&self, command: ShellCommand) -> AppResult<()>;
@@ -78,6 +79,22 @@ fn get_filtered_commands(db: &SqlitePool, search_term: &str) -> Vec<ShellCommand
             );
             debug!("{}", error);
             Vec::new()
+        })
+    })
+}
+
+fn get_filtered_commands_name(db: &SqlitePool, name: &str) -> Option<ShellCommand> {
+    task::block_on(async {
+        sqlx::query_as::<_, ShellCommand>(
+            "SELECT * FROM Commands WHERE name MATCH $1 ORDER BY rank",
+        )
+        .bind(name)
+        .fetch_optional(db)
+        .await
+        .unwrap_or_else(|error| {
+            error!("Error while searching for commands with name {}", name);
+            debug!("{}", error);
+            None
         })
     })
 }
