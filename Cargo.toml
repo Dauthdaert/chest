@@ -11,6 +11,10 @@ exclude = ["tools/**/*", ".github/**/*"]
 [profile.dev.package."*"]
 opt-level = 3
 
+[profile.release]
+codegen-units = 1
+lto = "fat"
+
 [workspace]
 members = ["./", "tools/ci"]
 
