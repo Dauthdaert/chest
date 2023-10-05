@@ -20,3 +20,9 @@ repos:
     -   id: fmt
     -   id: cargo-check
     -   id: clippy
+-   repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v2.4.0
+    hooks:
+    -   id: conventional-pre-commit
+        stages: [commit-msg]
+        args: []
