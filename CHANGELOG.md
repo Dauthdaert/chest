@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.1.0] - 2023-10-05
+
 ### Highlights
 
 Initial version, has support for
