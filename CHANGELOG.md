@@ -12,3 +12,6 @@ Initial version, has support for
 - Searching interactively or non-interactively
 - Shell integration with Nushell
 - Adding, updating and remove commands from the database
+
+<!-- next-url -->
+[Unreleased]: https://github.com/Dauthdaert/chest/compare/v0.1.0...HEAD
