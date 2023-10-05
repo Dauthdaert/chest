@@ -3,23 +3,35 @@ repos:
     rev: v4.4.0
     hooks:
     -   id: fix-byte-order-marker
+        stages: [commit]
     -   id: check-case-conflict
+        stages: [commit]
     -   id: check-merge-conflict
+        stages: [commit]
     -   id: check-symlinks
+        stages: [commit]
     -   id: check-yaml
+        stages: [commit]
     -   id: end-of-file-fixer
+        stages: [commit]
     -   id: mixed-line-ending
+        stages: [commit]
     -   id: trailing-whitespace
+        stages: [commit]
 -   repo: https://github.com/pre-commit/pre-commit
     rev: v3.4.0
     hooks:
     -   id: validate_manifest
+        stages: [commit]
 -   repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
     -   id: fmt
+        stages: [commit]
     -   id: cargo-check
+        stages: [commit]
     -   id: clippy
+        stages: [commit]
 -   repo: https://github.com/compilerla/conventional-pre-commit
     rev: v2.4.0
     hooks:
