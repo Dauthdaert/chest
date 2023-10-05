@@ -10,6 +10,8 @@ When you add a command to chest, it remembers:
 Next time you need a command, search for it using chest's search feature to quickly find it again.
 
 ## Install
+Current release: 0.1.0
+
 ### From source
 Set up a Rust toolchain using [rustup](https://rustup.rs/), clone the repository, then run:
 ```
