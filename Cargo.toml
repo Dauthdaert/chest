@@ -35,6 +35,22 @@ targets = ["x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
 # Publish jobs to run in CI
 pr-run-mode = "plan"
 
+# Config for 'cargo release'
+[workspace.metadata.release]
+# We don't want to publish to crates.io
+publish = false
+# Only cut a release from main
+allow-branch = ["main"]
+# Word replacements to do whilst cutting a release
+pre-release-replacements = [
+  {file="README.md", search="Current release: [a-z0-9\\.-]+", replace="Current release: {{version}}"} ,
+  {file="CHANGELOG.md", search="Unreleased", replace="{{version}}", min=1},
+  {file="CHANGELOG.md", search="\\.\\.\\.HEAD", replace="...{{tag_name}}", exactly=1},
+  {file="CHANGELOG.md", search="ReleaseDate", replace="{{date}}", min=1},
+  {file="CHANGELOG.md", search="<!-- next-header -->", replace="<!-- next-header -->\n## [Unreleased] - ReleaseDate\n", exactly=1},
+  {file="CHANGELOG.md", search="<!-- next-url -->", replace="<!-- next-url -->\n[Unreleased]: https://github.com/crate-ci/cargo-release/compare/{{tag_name}}...HEAD", exactly=1},
+]
+
 [dependencies]
 crossterm = "0.27"
 tui = { package = "ratatui", version = "0.23" }
