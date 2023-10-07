@@ -7,6 +7,8 @@
 
 Changed the name of the package to chest-rs in order to publish to crates.io. CLI name is unchanged.
 
+Added a Github Pages static site using [Oranda](https://opensource.axo.dev/oranda/).
+
 ## [0.1.0] - 2023-10-05
 
 ### Highlights

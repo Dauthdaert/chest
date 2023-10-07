@@ -1,0 +1,23 @@
+{
+  "project": {
+    "name": "chest"
+  },
+  "build": {
+    "path_prefix": "chest"
+  },
+  "styles": {
+    "theme": "hacker"
+  },
+  "components": {
+    "artifacts": {
+      "package_managers": {
+        "preferred": {
+          "crates.io": "cargo install chest-rs --locked --profile=dist"
+        },
+        "additional": {
+          "binstall": "cargo binstall chest-rs"
+        }
+      }
+    }
+  }
+}
