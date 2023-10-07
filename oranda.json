@@ -9,6 +9,7 @@
     "theme": "hacker"
   },
   "components": {
+    "mdbook": false,
     "artifacts": {
       "package_managers": {
         "preferred": {
