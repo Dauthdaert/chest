@@ -14,16 +14,47 @@ When you add a command to chest, it remembers:
 
 Next time you need a command, search for it using chest's search feature to quickly find it again.
 
-## Install
+<a name="toc" id="toc"/>
+
+## [Table of contents](#)
+
+<div class="oranda-hide" style="margin-bottom: -12px">
+
+- [Install](#install)
+
+</div>
+
+- [Shell integration](#shell-integration)
+- [Usage](#usage)
+- [Keybindings](#keybindings)
+
+<a name="install" id="install"/>
+
+<div class="oranda-hide">
+
+## [Install](#toc)
 Current release: 0.1.0
 
-### From source
-Set up a Rust toolchain using [rustup](https://rustup.rs/), clone the repository, then run:
+### Using crates.io
+Set up a Rust toolchain using [rustup](https://rustupers/), then run the following command.
 ```
-cargo install --path .
+cargo install chest-rs --locked --profile=dist
 ```
 
-## Shell Integration
+### Using cargo-binstall
+Install [cargo-binstall](https://crates.io/crates/cargo-binstall), then run the following command.
+```
+cargo binstall chest-rs
+```
+
+### Using Github Releases
+Archive formats and script installers are available in [Github Releases](https://github.com/Dauthdaert/chest/releases). Make sure the installed executable is in your PATH.
+
+</div>
+
+<a name="shell-integration" id="shell-integration"/>
+
+## [Shell Integration](#toc)
 Install `chest` as a plugin to enable deeper shell integration.
 
 #### Nushell
@@ -35,8 +66,9 @@ Then add the following to your Nushell config file.
 ```
 source ~/init-chest.nu
 ```
+<a name="usage" id="usage"/>
 
-## Usage
+## [Usage](#toc)
 ### Add
 In order to add a command to your chest database, use the following command.
 ```
@@ -89,8 +121,9 @@ If you get a database error after an update, it may be necessary to reset your s
 chest reset
 ```
 
+<a name="keybindings" id="keybindings"/>
 
-## Keybindings
+## [Keybindings](#toc)
 #### Open from shell
 ```
 <Ctrl-h>
