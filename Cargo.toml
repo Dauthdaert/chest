@@ -38,8 +38,6 @@ pr-run-mode = "plan"
 
 # Config for 'cargo release'
 [workspace.metadata.release]
-# We don't want to publish to crates.io
-publish = false
 # Only cut a release from main
 allow-branch = ["main"]
 # Word replacements to do whilst cutting a release
