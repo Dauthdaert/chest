@@ -1,5 +1,10 @@
-# chest
-chest is a multi-platform CLI Command organizer inspired by hoard.
+<div class="oranda-hide">
+
+# Chest
+
+</div>
+
+Chest is a multi-platform CLI Command organizer inspired by hoard and built in Rust.
 
 It allows you to save commands that are too complicated or long to remember.
 When you add a command to chest, it remembers:
