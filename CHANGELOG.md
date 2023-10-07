@@ -9,6 +9,9 @@ Changed the name of the package to chest-rs in order to publish to crates.io. CL
 
 Added a Github Pages static site using [Oranda](https://opensource.axo.dev/oranda/).
 
+### Docs
+- Added multiple install options (crates.io, binstall, Github Releases) to README.
+
 ## [0.1.0] - 2023-10-05
 
 ### Highlights
