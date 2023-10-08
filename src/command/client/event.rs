@@ -60,7 +60,10 @@ impl EventHandler {
                     }
 
                     if last_tick.elapsed() >= tick_rate {
-                        sender.send(Event::Tick).expect("failed to send tick event");
+                        if sender.send(Event::Tick).is_err() {
+                            // Receiver has disconnected, so we stop sending events.
+                            break;
+                        }
                         last_tick = Instant::now();
                     }
                 }
