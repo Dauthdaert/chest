@@ -27,7 +27,9 @@ impl Cmd {
                 command.command_text = command_text;
             }
 
-            if let Some(description) = prompt_opt("Enter the new description (empty to keep)")? {
+            if let Some(description) =
+                prompt_opt("Enter the new description (empty to keep current)")?
+            {
                 command.description = description;
             }
 
