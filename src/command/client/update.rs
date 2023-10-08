@@ -7,13 +7,19 @@ use crate::{
 };
 
 #[derive(Parser)]
-pub struct Cmd;
+pub struct Cmd {
+    /// Name of the command
+    name: Option<String>,
+}
 
 impl Cmd {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(mut self) -> AppResult<()> {
         let engine = Database::init()?;
 
-        let name: String = prompt("Enter a name for the command in Chest")?;
+        let name = match self.name.take() {
+            Some(name) => name,
+            None => prompt("Enter the command's name")?,
+        };
         if let Some(mut command) = engine.get_command(&name) {
             if let Some(command_text) =
                 prompt_opt("Enter the new command text (empty to keep current)")?
