@@ -31,7 +31,9 @@ impl Cmd {
                 command.description = description;
             }
 
-            engine.update_command(command)
+            engine.update_command(command)?;
+            println!("Succesfully updated command '{}'", name);
+            Ok(())
         } else {
             if let Some(alt_command) = engine.search_commands_strict(&name) {
                 println!(
