@@ -13,10 +13,10 @@ pub struct Cmd {
 }
 
 impl Cmd {
-    pub fn run(mut self) -> AppResult<()> {
+    pub fn run(self) -> AppResult<()> {
         let engine = Database::init()?;
 
-        let name = match self.name.take() {
+        let name = match self.name {
             Some(name) => name,
             None => prompt("Enter the command's name")?,
         };
