@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.2.0] - 2023-10-08
+
 ### Highlights
 
 Changed the name of the package to chest-rs in order to publish to crates.io. CLI name is unchanged.
@@ -32,4 +34,5 @@ Initial version, has support for
 - Adding, updating and remove commands from the database
 
 <!-- next-url -->
-[Unreleased]: https://github.com/Dauthdaert/chest/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/Dauthdaert/chest/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Dauthdaert/chest/compare/v0.1.0...v0.2.0

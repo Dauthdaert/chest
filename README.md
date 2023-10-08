@@ -33,7 +33,7 @@ Next time you need a command, search for it using chest's search feature to quic
 <div class="oranda-hide">
 
 ## [Install](#toc)
-Current release: 0.1.0
+Current release: 0.2.0
 
 ### Using crates.io
 Set up a Rust toolchain using [rustup](https://rustupers/), then run the following command.
