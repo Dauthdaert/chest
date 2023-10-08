@@ -21,7 +21,9 @@ impl Cmd {
             None => prompt("Enter the command's name")?,
         };
         if engine.get_command(&name).is_some() {
-            engine.remove_command(&name)
+            engine.remove_command(&name)?;
+            println!("Succesfully removed command '{}'", name);
+            Ok(())
         } else {
             if let Some(alt_command) = engine.search_commands_strict(&name) {
                 println!(
