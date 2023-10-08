@@ -10,29 +10,32 @@ use crate::{
 };
 
 #[derive(Parser)]
-pub struct Cmd;
+pub struct Cmd {
+    /// Name of the command
+    name: Option<String>,
+}
 
 impl Cmd {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(mut self) -> AppResult<()> {
         let engine = Database::init()?;
 
-        let name = loop {
-            let name: String = prompt("Enter a name for the command in Chest")?;
-            if engine.get_command(&name).is_none() {
-                break name;
-            } else {
-                println!("This command name is already taken.");
-            }
+        let name = match self.name.take() {
+            Some(name) => name,
+            None => prompt("Enter a name for the command in Chest")?,
         };
+        if engine.get_command(&name).is_none() {
+            let command_text = prompt("Enter the command text")?;
+            let description =
+                prompt_opt("Enter the description (optional)")?.unwrap_or("".to_string());
 
-        let command_text: String = prompt("Enter the command text")?;
-        let description: String =
-            prompt_opt("Enter the description (optional)")?.unwrap_or("".to_string());
-
-        engine.add_command(ShellCommand {
-            name,
-            command_text,
-            description,
-        })
+            engine.add_command(ShellCommand {
+                name,
+                command_text,
+                description,
+            })
+        } else {
+            println!("Name '{}' is already taken.", name);
+            Ok(())
+        }
     }
 }
