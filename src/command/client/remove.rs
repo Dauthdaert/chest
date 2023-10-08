@@ -19,7 +19,7 @@ impl Cmd {
         } else {
             if let Some(alt_command) = engine.search_commands_strict(&name) {
                 println!(
-                    "No command by this name. Did you mean {}?",
+                    "No command by this name. Did you mean '{}'?",
                     alt_command.name
                 );
             } else {
