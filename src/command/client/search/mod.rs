@@ -36,7 +36,7 @@ impl Cmd {
         if self.interactive {
             let command = interactive(self.query)?;
             if let Some(command) = command {
-                eprintln!("{}", command.command_text);
+                println!("{}", command.command_text);
             }
         } else {
             let commands = non_interactive(self.query)?;
@@ -59,7 +59,7 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     let mut app: App<Database> = App::new(query.join(" "));
 
     // Initialize the terminal user interface.
-    let backend = CrosstermBackend::new(io::stdout());
+    let backend = CrosstermBackend::new(io::stderr());
     let terminal = Terminal::new(backend)?;
     let events = EventHandler::new(250);
     let mut tui = Tui::new(terminal, events);
@@ -79,7 +79,7 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     }
 
     // Exit the user interface.
-    Tui::<CrosstermBackend<io::Stdout>>::reset()?;
+    Tui::<CrosstermBackend<io::Stderr>>::reset()?;
 
     // Return the selected command if the selection was confirmed
     // Vec::get handles out of bounds access if the Vec is empty
