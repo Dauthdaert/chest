@@ -1,7 +1,9 @@
-use std::io;
+use std::{borrow::Cow, io};
 
 use ::tui::prelude::*;
 use clap::Parser;
+use promptly::prompt;
+use regex::Regex;
 
 use crate::AppResult;
 
@@ -36,7 +38,17 @@ impl Cmd {
         if self.interactive {
             let command = interactive(self.query)?;
             if let Some(command) = command {
-                println!("{}", command.command_text);
+                let mut command_text = Cow::from(command.command_text);
+
+                let expansion_regex = Regex::new("#")?;
+                while expansion_regex.is_match(&command_text) {
+                    eprintln!("Current command: {}", &command_text);
+                    let expansion: String = prompt("Expand next placeholder into")?;
+                    if let Cow::Owned(new) = expansion_regex.replace(&command_text, &expansion) {
+                        command_text = Cow::Owned(new);
+                    }
+                }
+                println!("{}", command_text);
             }
         } else {
             let commands = non_interactive(self.query)?;
