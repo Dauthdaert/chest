@@ -13,6 +13,7 @@ Add placeholder expansion using the '#' character as a placeholder.
 
 ### Features
 - Rework the add command.
+- Rework name input in all commands.
 
 ### Bugfixes
 - Fix errors outputting to the prompt on panic.
