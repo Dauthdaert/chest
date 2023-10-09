@@ -36,8 +36,10 @@ on:
 
   # Whenever a Github Release is published, update the docs!
   release:
-    types:
-      - released
+    types: [released]
+
+  # Manually
+  workflow_dispatch:
 
 # Alright, let's do it!
 jobs:
