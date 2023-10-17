@@ -107,13 +107,13 @@ Using the following command, a TUI opens that allows for interactive searching.
 ```
 chest search --interactive
 ```
-Optionnally, a query can be added in order to populate the search box with an initial search term.
+Optionally, a query can be added in order to populate the search box with an initial search term.
 ```
 chest search --interactive <QUERY>
 ```
 
 Finally, if chest is installed as a **shell plugin**, interactive search is available through a keybinding (default Ctrl-h).
-Additionaly, if chest is invoked through the keybinding, confirming a selection adds the selected command to your next prompt.
+Additionally, if chest is invoked through the keybinding, confirming a selection adds the selected command to your next prompt.
 
 ### Reset
 If you get a database error after an update, it may be necessary to reset your saved commands. You can do so using the following command.

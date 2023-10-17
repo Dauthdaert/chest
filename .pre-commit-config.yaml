@@ -32,6 +32,11 @@ repos:
         stages: [commit]
     -   id: clippy
         stages: [commit]
+-   repo: https://github.com/crate-ci/typos
+    rev: v1.16.20
+    hooks:
+    -   id: typos
+        stages: [commit]
 -   repo: https://github.com/compilerla/conventional-pre-commit
     rev: v2.4.0
     hooks:
