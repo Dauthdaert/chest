@@ -1,5 +1,4 @@
 use tui::{
-    backend::Backend,
     prelude::*,
     style::{Color, Style},
     widgets::{Block, Borders, List, ListItem, Paragraph},
@@ -9,7 +8,7 @@ use tui::{
 use crate::command::client::{engine::Engine, search::app::App};
 
 /// Renders the user interface widgets.
-pub fn render<B: Backend, T: Engine>(app: &App<T>, frame: &mut Frame<'_, B>) {
+pub fn render<T: Engine>(app: &App<T>, frame: &mut Frame<'_>) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .margin(2)
@@ -28,7 +27,7 @@ pub fn render<B: Backend, T: Engine>(app: &App<T>, frame: &mut Frame<'_, B>) {
     command_list(chunks[2], app, frame);
 }
 
-fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &App<T>, frame: &mut Frame<B>) {
+fn command_list<T: Engine>(chunk: Rect, app: &App<T>, frame: &mut Frame) {
     let [list_chunk, command_chunk] = *Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Length(35), Constraint::Min(1)].as_ref())
@@ -75,7 +74,7 @@ fn command_list<T: Engine, B: Backend>(chunk: Rect, app: &App<T>, frame: &mut Fr
     frame.render_widget(description, description_chunk);
 }
 
-fn help_text<B: Backend>(chunk: Rect, frame: &mut Frame<B>) {
+fn help_text(chunk: Rect, frame: &mut Frame) {
     let (msg, style) = (
         vec![
             Span::raw("Press "),
@@ -92,7 +91,7 @@ fn help_text<B: Backend>(chunk: Rect, frame: &mut Frame<B>) {
     frame.render_widget(help_message, chunk);
 }
 
-fn search_box<T: Engine, B: Backend>(chunk: Rect, app: &App<T>, frame: &mut Frame<B>) {
+fn search_box<T: Engine>(chunk: Rect, app: &App<T>, frame: &mut Frame) {
     // keep 2 for borders and 1 for cursor
     let width = chunk.width.max(3) - 3;
 
