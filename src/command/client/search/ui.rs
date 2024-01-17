@@ -43,20 +43,14 @@ fn command_list<T: Engine>(chunk: Rect, app: &App<T>, frame: &mut Frame) {
         unreachable!()
     };
 
-    let commands = List::new(
-        app.current_commands
-            .iter()
-            .enumerate()
-            .map(|(i, command)| {
-                let style = if app.selected == i {
-                    Style::default().fg(Color::Yellow)
-                } else {
-                    Style::default()
-                };
-                ListItem::new(command.name.to_string()).style(style)
-            })
-            .collect::<Vec<ListItem>>(),
-    )
+    let commands = List::new(app.current_commands.iter().enumerate().map(|(i, command)| {
+        let style = if app.selected == i {
+            Style::default().fg(Color::Yellow)
+        } else {
+            Style::default()
+        };
+        ListItem::new(command.name.to_string()).style(style)
+    }))
     .block(Block::default().borders(Borders::ALL).title("Commands"));
     frame.render_widget(commands, list_chunk);
 
