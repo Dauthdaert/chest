@@ -1,9 +1,10 @@
-use crate::{dirs::db_path, AppResult};
+use crate::dirs::db_path;
 
 use super::shell_command::ShellCommand;
 
 mod db;
 
+use anyhow::Result;
 use async_std::task;
 pub use db::Database;
 use log::{debug, error};
@@ -14,13 +15,13 @@ use sqlx::{
 };
 
 pub trait Engine: Sized {
-    fn init() -> AppResult<Self>;
+    fn init() -> Result<Self>;
     fn search_commands(&self, search_term: &str) -> Vec<ShellCommand>;
     fn search_commands_strict(&self, name: &str) -> Option<ShellCommand>;
     fn get_command(&self, name: &str) -> Option<ShellCommand>;
-    fn add_command(&self, command: ShellCommand) -> AppResult<()>;
-    fn update_command(&self, command: ShellCommand) -> AppResult<()>;
-    fn remove_command(&self, name: &str) -> AppResult<()>;
+    fn add_command(&self, command: ShellCommand) -> Result<()>;
+    fn update_command(&self, command: ShellCommand) -> Result<()>;
+    fn remove_command(&self, name: &str) -> Result<()>;
 }
 
 fn create_database_connection() -> Result<SqlitePool, Error> {
@@ -113,7 +114,7 @@ fn get_command(db: &SqlitePool, name: &str) -> Option<ShellCommand> {
     })
 }
 
-fn add_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
+fn add_command(db: &SqlitePool, command: ShellCommand) -> Result<()> {
     Ok(task::block_on(async {
         sqlx::query("INSERT INTO Commands (name, command_text, description) VALUES ($1, $2, $3);")
             .bind(command.name)
@@ -125,7 +126,7 @@ fn add_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
     })?)
 }
 
-fn update_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
+fn update_command(db: &SqlitePool, command: ShellCommand) -> Result<()> {
     Ok(task::block_on(async {
         sqlx::query("UPDATE Commands SET command_text=$2, description=$3 WHERE name=$1;")
             .bind(command.name)
@@ -137,7 +138,7 @@ fn update_command(db: &SqlitePool, command: ShellCommand) -> AppResult<()> {
     })?)
 }
 
-fn remove_command(db: &SqlitePool, name: &str) -> AppResult<()> {
+fn remove_command(db: &SqlitePool, name: &str) -> Result<()> {
     Ok(task::block_on(async {
         sqlx::query("DELETE FROM Commands WHERE name = $1")
             .bind(name)

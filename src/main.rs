@@ -1,6 +1,8 @@
-use chest_rs::{AppResult, Chest};
+use anyhow::Result;
 use clap::Parser;
 
-fn main() -> AppResult<()> {
+use chest_rs::Chest;
+
+fn main() -> Result<()> {
     Chest::parse().run()
 }

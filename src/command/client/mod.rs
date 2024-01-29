@@ -6,9 +6,8 @@ mod search;
 mod shell_command;
 mod update;
 
+use anyhow::Result;
 use clap::Subcommand;
-
-use crate::AppResult;
 
 #[derive(Subcommand)]
 pub enum Cmd {
@@ -24,7 +23,7 @@ pub enum Cmd {
 }
 
 impl Cmd {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(self) -> Result<()> {
         match self {
             Cmd::Add(cmd) => cmd.run(),
             Cmd::Update(cmd) => cmd.run(),

@@ -1,11 +1,10 @@
-use std::{borrow::Cow, io};
+use std::{borrow::Cow, error::Error, fmt::Display, io};
 
 use ::tui::prelude::*;
+use anyhow::Result;
 use clap::Parser;
 use promptly::prompt;
 use regex::Regex;
-
-use crate::AppResult;
 
 use self::{
     app::{App, RunStatus},
@@ -34,21 +33,28 @@ pub struct Cmd {
 }
 
 impl Cmd {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(self) -> Result<()> {
         if self.interactive {
-            let command = interactive(self.query)?;
-            if let Some(command) = command {
-                let mut command_text = Cow::from(command.command_text);
+            match interactive(self.query) {
+                Ok(command) => {
+                    let mut command_text = Cow::from(command.command_text);
 
-                let expansion_regex = Regex::new("#")?;
-                while expansion_regex.is_match(&command_text) {
-                    eprintln!("Current command: {}", &command_text);
-                    let expansion: String = prompt("Expand next placeholder into")?;
-                    if let Cow::Owned(new) = expansion_regex.replace(&command_text, &expansion) {
-                        command_text = Cow::Owned(new);
+                    let expansion_regex = Regex::new("#")?;
+                    while expansion_regex.is_match(&command_text) {
+                        eprintln!("Current command: {}", &command_text);
+                        let expansion: String = prompt("Expand next placeholder into")?;
+                        if let Cow::Owned(new) = expansion_regex.replace(&command_text, &expansion)
+                        {
+                            command_text = Cow::Owned(new);
+                        }
                     }
+                    println!("{}", command_text);
                 }
-                println!("{}", command_text);
+                Err(e) => match e.downcast_ref::<CommandFetchFailed>() {
+                    // If we failed to fetch a command, we silently fail and return ok.
+                    Some(_) => return Ok(()),
+                    None => return Err(e),
+                },
             }
         } else {
             let commands = non_interactive(self.query)?;
@@ -66,7 +72,17 @@ impl Cmd {
     }
 }
 
-fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
+#[derive(Debug, Clone, Copy)]
+struct CommandFetchFailed;
+
+impl Error for CommandFetchFailed {}
+impl Display for CommandFetchFailed {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "No command was found")
+    }
+}
+
+fn interactive(query: Vec<String>) -> Result<ShellCommand> {
     // Create an application.
     let mut app: App<Database> = App::new(query.join(" "));
 
@@ -96,13 +112,17 @@ fn interactive(query: Vec<String>) -> AppResult<Option<ShellCommand>> {
     // Return the selected command if the selection was confirmed
     // Vec::get handles out of bounds access if the Vec is empty
     if app.status == RunStatus::Confirmed {
-        Ok(app.current_commands.get(app.selected).cloned())
+        if let Some(command) = app.current_commands.get(app.selected) {
+            Ok(command.clone())
+        } else {
+            Err(CommandFetchFailed.into())
+        }
     } else {
-        Ok(None)
+        Err(CommandFetchFailed.into())
     }
 }
 
-fn non_interactive(query: Vec<String>) -> AppResult<Vec<ShellCommand>> {
+fn non_interactive(query: Vec<String>) -> Result<Vec<ShellCommand>> {
     let engine = Database::init()?;
     let mut commands = engine.search_commands(&query.join(" "));
 

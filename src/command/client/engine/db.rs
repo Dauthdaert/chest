@@ -2,7 +2,8 @@ use super::{
     add_command, create_database_connection, get_all_commands, get_command, get_filtered_commands,
     get_filtered_commands_name, remove_command, update_command, Engine,
 };
-use crate::{command::client::shell_command::ShellCommand, AppResult};
+use crate::command::client::shell_command::ShellCommand;
+use anyhow::Result;
 use sqlx::SqlitePool;
 
 pub struct Database {
@@ -10,7 +11,7 @@ pub struct Database {
 }
 
 impl Engine for Database {
-    fn init() -> AppResult<Self> {
+    fn init() -> Result<Self> {
         Ok(Self {
             connection: create_database_connection()?,
         })
@@ -36,15 +37,15 @@ impl Engine for Database {
         get_command(&self.connection, name)
     }
 
-    fn add_command(&self, command: ShellCommand) -> AppResult<()> {
+    fn add_command(&self, command: ShellCommand) -> Result<()> {
         add_command(&self.connection, command)
     }
 
-    fn update_command(&self, command: ShellCommand) -> AppResult<()> {
+    fn update_command(&self, command: ShellCommand) -> Result<()> {
         update_command(&self.connection, command)
     }
 
-    fn remove_command(&self, name: &str) -> AppResult<()> {
+    fn remove_command(&self, name: &str) -> Result<()> {
         remove_command(&self.connection, name)
     }
 }

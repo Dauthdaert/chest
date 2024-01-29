@@ -3,9 +3,8 @@ mod info;
 mod init;
 mod reset;
 
+use anyhow::Result;
 use clap::Subcommand;
-
-use crate::AppResult;
 
 #[derive(Subcommand)]
 pub enum ChestCommand {
@@ -20,7 +19,7 @@ pub enum ChestCommand {
 }
 
 impl ChestCommand {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(self) -> Result<()> {
         match self {
             ChestCommand::Init(init) => {
                 init.run();

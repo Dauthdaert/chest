@@ -3,6 +3,7 @@ mod dirs;
 
 use std::fs::File;
 
+use anyhow::{Context, Result};
 use clap::Parser;
 use command::ChestCommand;
 #[cfg(not(debug_assertions))]
@@ -13,9 +14,6 @@ use simplelog::{Config, WriteLogger};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-/// Application result type.
-pub type AppResult<T> = std::result::Result<T, Box<dyn std::error::Error>>;
-
 #[derive(Parser)]
 #[command(author = "Wayan-Gwie Lapointe", version = VERSION)]
 pub struct Chest {
@@ -24,16 +22,16 @@ pub struct Chest {
 }
 
 impl Chest {
-    pub fn run(self) -> AppResult<()> {
-        init();
+    pub fn run(self) -> Result<()> {
+        init()?;
         self.chest.run()
     }
 }
 
-fn init() {
+fn init() -> Result<()> {
     // Initialize data directory if it's missing
     #[cfg(not(debug_assertions))]
-    std::fs::create_dir_all(data_dir()).expect("Unable to create data directory");
+    std::fs::create_dir_all(data_dir()).context("Unable to create data directory")?;
 
     let filter = if cfg!(debug_assertions) {
         LevelFilter::Debug
@@ -45,13 +43,14 @@ fn init() {
         filter,
         Config::default(),
         File::options()
-            .write(true)
             .create(true)
             .append(true)
             .open(log_path())
-            .expect("Unable to open log file"),
+            .context("Unable to open log file")?,
     )
-    .expect("Unable to start logger");
+    .context("Unable to start logger")?;
+
+    Ok(())
 }
 
 #[test]
