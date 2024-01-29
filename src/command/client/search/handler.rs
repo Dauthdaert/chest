@@ -1,13 +1,14 @@
+use anyhow::Result;
 use crossterm::event::{Event as CrosstermEvent, KeyCode, KeyEvent, KeyEventKind, KeyModifiers};
 use log::debug;
 use tui_input::backend::crossterm::EventHandler;
 
-use crate::{command::client::engine::Engine, AppResult};
+use crate::command::client::engine::Engine;
 
 use super::app::App;
 
 /// Handles the key events and updates the state of [`App`].
-pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> AppResult<()> {
+pub fn handle_key_events<T: Engine>(key_event: KeyEvent, app: &mut App<T>) -> Result<()> {
     // Don't process key events that aren't presses
     if key_event.kind != KeyEventKind::Press {
         return Ok(());

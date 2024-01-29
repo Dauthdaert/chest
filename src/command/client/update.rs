@@ -1,10 +1,8 @@
+use anyhow::Result;
 use clap::Parser;
 use promptly::{prompt, prompt_opt};
 
-use crate::{
-    command::client::engine::{Database, Engine},
-    AppResult,
-};
+use crate::command::client::engine::{Database, Engine};
 
 #[derive(Parser)]
 pub struct Cmd {
@@ -13,7 +11,7 @@ pub struct Cmd {
 }
 
 impl Cmd {
-    pub fn run(self) -> AppResult<()> {
+    pub fn run(self) -> Result<()> {
         let engine = Database::init()?;
 
         let name = match self.name {
