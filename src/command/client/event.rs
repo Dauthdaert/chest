@@ -6,6 +6,7 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 /// Terminal events.
+#[allow(dead_code)]
 #[derive(Clone, Copy, Debug)]
 pub enum Event {
     /// Terminal tick.

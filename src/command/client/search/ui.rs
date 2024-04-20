@@ -79,8 +79,7 @@ fn help_text(chunk: Rect, frame: &mut Frame) {
         ],
         Style::default().add_modifier(Modifier::RAPID_BLINK),
     );
-    let mut text = Text::from(Line::from(msg));
-    text.patch_style(style);
+    let text = Text::from(Line::from(msg)).patch_style(style);
     let help_message = Paragraph::new(text);
     frame.render_widget(help_message, chunk);
 }
