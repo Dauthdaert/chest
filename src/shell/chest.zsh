@@ -4,7 +4,7 @@ _chest_search() {
   zle -I
 
   local output
-  output=$(CHEST_SHELL_ZSH=y chest search $* -i -- $BUFFER)
+  output=$(CHEST_SHELL_ZSH=y chest search $* -i)
 
   zle reset-prompt
 
@@ -21,8 +21,8 @@ _chest_search() {
 
 }
 
-zle -N _chest_search_widget _chest_search
+zle -N chest_search _chest_search
 
-bindkey -M emacs '^h' _chest_search_widget
-bindkey -M vicmd '^h' _chest_search_widget
-bindkey -M viins '^h' _chest_search_widget
+bindkey -M emacs '^h' chest_search
+bindkey -M vicmd '^h' chest_search
+bindkey -M viins '^h' chest_search

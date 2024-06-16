@@ -3,6 +3,10 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+### Highlights
+
+Added shell integration support for the zsh shell.
+
 ## [0.2.0] - 2023-10-08
 
 ### Highlights
