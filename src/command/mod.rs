@@ -2,6 +2,7 @@ mod client;
 mod info;
 mod init;
 mod reset;
+mod utils;
 
 use anyhow::Result;
 use clap::Subcommand;

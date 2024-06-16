@@ -9,6 +9,7 @@ pub struct Cmd {
 #[derive(Clone, Copy, ValueEnum)]
 pub enum Shell {
     Nu,
+    Zsh,
 }
 
 impl Cmd {
@@ -17,9 +18,15 @@ impl Cmd {
         println!("{full}");
     }
 
+    fn init_zsh(&self) {
+        let full = include_str!("../shell/chest.zsh");
+        println!("{full}");
+    }
+
     pub fn run(self) {
         match self.shell {
             Shell::Nu => self.init_nu(),
+            Shell::Zsh => self.init_zsh(),
         }
     }
 }

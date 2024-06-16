@@ -6,6 +6,8 @@ use clap::Parser;
 use promptly::prompt;
 use regex::Regex;
 
+use crate::command::utils;
+
 use self::{
     app::{App, RunStatus},
     handler::handle_key_events,
@@ -38,6 +40,9 @@ impl Cmd {
             match interactive(self.query) {
                 Ok(command) => {
                     let mut command_text = Cow::from(command.command_text);
+                    if utils::is_zsh() {
+                        command_text.to_mut().insert_str(0, "__chest_accept__:");
+                    }
 
                     let expansion_regex = Regex::new("#")?;
                     while expansion_regex.is_match(&command_text) {
