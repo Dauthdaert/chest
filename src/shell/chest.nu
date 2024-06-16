@@ -2,9 +2,9 @@
 
 def _chest_search_cmd [...flags: string] {
   ([
-    `commandline (run-external --redirect-stdout chest search`,
-    ($flags | append [--interactive, --] | each {|e| $'"($e)"'}),
-    `(commandline) | complete | $in.stdout | str substring ..-1)`,
+    `commandline edit (run-external chest search`,
+    ($flags | append [--interactive] | each {|e| $'"($e)"'}),
+    ` | str trim)`,
   ] | flatten | str join ' ')
 }
 

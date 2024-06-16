@@ -6,6 +6,7 @@
 ### Highlights
 
 Added shell integration support for the zsh shell.
+Update shell integration support for nushell.
 
 ## [0.2.0] - 2023-10-08
 
