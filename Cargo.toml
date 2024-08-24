@@ -60,7 +60,7 @@ tui = { package = "ratatui", version = "0.26" }
 tui-input = "0.8"
 better-panic = "0.3.0"
 async-std = "1.12"
-sqlx = { version = "0.7", features = ["runtime-async-std", "sqlite"] }
+sqlx = { version = "0.8", features = ["runtime-async-std", "sqlite"] }
 directories = "5.0"
 log = { version = "0.4", features = ["std"] }
 simplelog = "0.12"
