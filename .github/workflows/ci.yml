@@ -19,7 +19,7 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.1.0
+        uses: Leafwing-Studios/cargo-cache@v1.2.0
       - name: CI job
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- lints
@@ -32,7 +32,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.1.0
+        uses: Leafwing-Studios/cargo-cache@v1.2.0
       - name: Build & run tests
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- test
@@ -47,7 +47,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.1.0
+        uses: Leafwing-Studios/cargo-cache@v1.2.0
       - name: Check Compile
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- compile
@@ -60,7 +60,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.1.0
+        uses: Leafwing-Studios/cargo-cache@v1.2.0
       - name: Build and check doc
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- doc
