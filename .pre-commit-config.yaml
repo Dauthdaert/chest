@@ -23,10 +23,6 @@ repos:
     hooks:
       - id: validate_manifest
         stages: [commit]
-  - repo: https://github.com/google/yamlfmt
-    rev: v0.10.0
-    hooks:
-      - id: yamlfmt
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
