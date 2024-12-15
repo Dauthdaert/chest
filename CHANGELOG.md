@@ -3,6 +3,8 @@
 <!-- next-header -->
 ## [Unreleased] - ReleaseDate
 
+## [0.3.1] - 2024-12-15
+
 ## [0.3.0] - 2024-12-15
 
 ### Highlights
@@ -42,6 +44,7 @@ Initial version, has support for
 - Adding, updating and remove commands from the database
 
 <!-- next-url -->
-[Unreleased]: https://github.com/Dauthdaert/chest/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Dauthdaert/chest/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/Dauthdaert/chest/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Dauthdaert/chest/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Dauthdaert/chest/compare/v0.1.0...v0.2.0
