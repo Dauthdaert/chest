@@ -19,7 +19,9 @@ jobs:
           toolchain: stable
           components: rustfmt, clippy
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.2.0
+        uses: Leafwing-Studios/cargo-cache@v2
+        with:
+          sweep-cache: true
       - name: CI job
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- lints
