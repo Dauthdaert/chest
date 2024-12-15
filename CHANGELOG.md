@@ -7,6 +7,7 @@
 
 Added shell integration support for the zsh shell.
 Update shell integration support for nushell.
+Added shell integration support for PowerShell.
 
 ## [0.2.0] - 2023-10-08
 

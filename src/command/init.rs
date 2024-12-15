@@ -10,6 +10,7 @@ pub struct Cmd {
 pub enum Shell {
     Nu,
     Zsh,
+    Powershell,
 }
 
 impl Cmd {
@@ -23,10 +24,16 @@ impl Cmd {
         println!("{full}");
     }
 
+    fn init_ps(self) {
+        let full = include_str!("../shell/chest.ps1");
+        println!("{full}");
+    }
+
     pub fn run(self) {
         match self.shell {
             Shell::Nu => self.init_nu(),
             Shell::Zsh => self.init_zsh(),
+            Shell::Powershell => self.init_ps(),
         }
     }
 }

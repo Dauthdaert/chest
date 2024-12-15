@@ -65,6 +65,16 @@ chest init nu | save ~/init-chest.nu
 Then add the following to your Nushell config file.
 ```
 source ~/init-chest.nu
+
+#### Zsh
+Add the following to your zsh profile.
+
+source chest init zsh
+
+#### PowerShell
+Add the following to your PowerShell profile.
+
+Invoke-Expression (& { (chest init powershell | Out-String) })
 ```
 <a name="usage" id="usage"/>
 
