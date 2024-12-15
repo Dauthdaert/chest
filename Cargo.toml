@@ -1,7 +1,7 @@
 [package]
 name = "chest-rs"
 description = "A multiplatform CLI command organizer"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Wayan-Gwie Lapointe"]
 repository = "https://github.com/Dauthdaert/chest"
 readme = "README.md"
