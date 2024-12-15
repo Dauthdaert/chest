@@ -36,7 +36,7 @@ Next time you need a command, search for it using chest's search feature to quic
 Current release: 0.2.0
 
 ### Using crates.io
-Set up a Rust toolchain using [rustup](https://rustupers/), then run the following command.
+Set up a Rust toolchain using [rustup](https://rustup.rs/), then run the following command.
 ```
 cargo install chest-rs --locked --profile=dist
 ```
