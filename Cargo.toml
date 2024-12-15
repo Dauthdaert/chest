@@ -57,7 +57,7 @@ path = "src/main.rs"
 [dependencies]
 crossterm = "0.27"
 tui = { package = "ratatui", version = "0.29" }
-tui-input = "0.8"
+tui-input = "0.11"
 better-panic = "0.3.0"
 async-std = "1.12"
 sqlx = { version = "0.8", features = ["runtime-async-std", "sqlite"] }
