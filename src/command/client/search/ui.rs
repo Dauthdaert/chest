@@ -20,7 +20,7 @@ pub fn render<T: Engine>(app: &App<T>, frame: &mut Frame<'_>) {
             ]
             .as_ref(),
         )
-        .split(frame.size());
+        .split(frame.area());
 
     help_text(chunks[0], frame);
     search_box(chunks[1], app, frame);
@@ -96,10 +96,10 @@ fn search_box<T: Engine>(chunk: Rect, app: &App<T>, frame: &mut Frame) {
     frame.render_widget(input, chunk);
 
     // Make the cursor visible and ask tui-rs to put it at the specified coordinates after rendering
-    frame.set_cursor(
+    frame.set_cursor_position(Position::new(
         // Put cursor past the end of the input text
         chunk.x + ((app.search_box.visual_cursor()).max(scroll) - scroll) as u16 + 1,
         // Move one line down, from the border to the input line
         chunk.y + 1,
-    );
+    ));
 }
