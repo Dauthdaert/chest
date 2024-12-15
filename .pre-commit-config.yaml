@@ -1,45 +1,49 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
-    -   id: fix-byte-order-marker
+      - id: fix-byte-order-marker
         stages: [commit]
-    -   id: check-case-conflict
+      - id: check-case-conflict
         stages: [commit]
-    -   id: check-merge-conflict
+      - id: check-merge-conflict
         stages: [commit]
-    -   id: check-symlinks
+      - id: check-symlinks
         stages: [commit]
-    -   id: check-yaml
+      - id: check-yaml
         stages: [commit]
-    -   id: end-of-file-fixer
+      - id: end-of-file-fixer
         stages: [commit]
-    -   id: mixed-line-ending
+      - id: mixed-line-ending
         stages: [commit]
-    -   id: trailing-whitespace
+      - id: trailing-whitespace
         stages: [commit]
--   repo: https://github.com/pre-commit/pre-commit
+  - repo: https://github.com/pre-commit/pre-commit
     rev: v3.4.0
     hooks:
-    -   id: validate_manifest
+      - id: validate_manifest
         stages: [commit]
--   repo: https://github.com/doublify/pre-commit-rust
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.10.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
-    -   id: fmt
+      - id: fmt
         stages: [commit]
-    -   id: cargo-check
+      - id: cargo-check
         stages: [commit]
-    -   id: clippy
+      - id: clippy
         stages: [commit]
--   repo: https://github.com/crate-ci/typos
+  - repo: https://github.com/crate-ci/typos
     rev: v1.16.20
     hooks:
-    -   id: typos
+      - id: typos
         stages: [commit]
--   repo: https://github.com/compilerla/conventional-pre-commit
+  - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v2.4.0
     hooks:
-    -   id: conventional-pre-commit
+      - id: conventional-pre-commit
         stages: [commit-msg]
         args: []
