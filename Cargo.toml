@@ -55,16 +55,16 @@ name = "chest"
 path = "src/main.rs"
 
 [dependencies]
-crossterm = "0.27"
+crossterm = "0.28"
 tui = { package = "ratatui", version = "0.29" }
-tui-input = "0.8"
+tui-input = "0.11"
 better-panic = "0.3.0"
-async-std = "1.12"
+async-std = "1.13"
 sqlx = { version = "0.8", features = ["runtime-async-std", "sqlite"] }
 directories = "5.0"
 log = { version = "0.4", features = ["std"] }
 simplelog = "0.12"
-clap = { version = "4.5.7", features = ["derive"] }
+clap = { version = "4.5.23", features = ["derive"] }
 promptly = "0.3.1"
-regex = "1.10.5"
-anyhow = "1.0.86"
+regex = "1.11.1"
+anyhow = "1.0.94"
