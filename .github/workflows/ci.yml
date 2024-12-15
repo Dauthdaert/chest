@@ -34,7 +34,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.2.0
+        uses: Leafwing-Studios/cargo-cache@v2.5.0
       - name: Build & run tests
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- test
@@ -49,7 +49,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.2.0
+        uses: Leafwing-Studios/cargo-cache@v2.5.0
       - name: Check Compile
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- compile
@@ -62,7 +62,7 @@ jobs:
         with:
           toolchain: stable
       - name: Cache Cargo build files
-        uses: Leafwing-Studios/cargo-cache@v1.2.0
+        uses: Leafwing-Studios/cargo-cache@v2.5.0
       - name: Build and check doc
         # See tools/ci/src/main.rs for the commands this runs
         run: cargo run -p ci -- doc
