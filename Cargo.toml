@@ -54,7 +54,7 @@ tui-input = "0.11"
 better-panic = "0.3.0"
 async-std = "1.13"
 sqlx = { version = "0.8", features = ["runtime-async-std", "sqlite"] }
-directories = "5.0"
+directories = "6.0"
 log = { version = "0.4", features = ["std"] }
 simplelog = "0.12"
 clap = { version = "4.5.23", features = ["derive"] }
