@@ -48,7 +48,7 @@ name = "chest"
 path = "src/main.rs"
 
 [dependencies]
-crossterm = "0.28"
+crossterm = "0.29"
 tui = { package = "ratatui", version = "0.29" }
 tui-input = "0.11"
 better-panic = "0.3.0"
